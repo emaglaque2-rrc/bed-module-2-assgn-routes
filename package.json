@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,12 @@
   },
   "homepage": "https://github.com/emaglaque2-rrc/bed-module-2-assgn-routes#readme",
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.5.2",
+    "@types/supertest": "^6.0.3",
+    "jest": "^30.1.3",
+    "supertest": "^7.1.4",
+    "ts-jest": "^29.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },

@@ -1,6 +1,7 @@
 // import the express application and type definition
 import express, { Express } from "express";
 
+// Importing morgan for logging
 import morgan from "morgan"; 
 
 // import itemRoutes
@@ -18,6 +19,15 @@ app.get("/", (_req, res) => {
 });
 
 app.use('/api/v1/items', itemRoutes);
+
+app.get("/api/v1/health", (_req, res) => {
+    res.json({
+        status: "OK",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+        version: "1.0.0",
+    });
+});
 
 // export app and server for testing
 export default app;

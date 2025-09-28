@@ -1,16 +1,12 @@
 import express, { Router } from "express";
 import * as employeeController from "../controllers/employeeController";
 
-import { employees } from "../../../data/employee";
-
 const router: Router = express.Router();
 
 // Base path will be prefixed with "/api/v1/employees" from app.ts
 router.post("/", employeeController.createEmployee);
 
-router.get("/", (_req, res) => {
-  res.json(employees);
-});
+router.get("/", employeeController.getAllEmployees);
 
 router.put("/:id", (_req, res) => {
   res.send("Update an employee");

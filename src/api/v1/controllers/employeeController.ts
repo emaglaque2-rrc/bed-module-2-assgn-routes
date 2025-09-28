@@ -66,3 +66,26 @@ export const createEmployee = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to retrieve all employees.
+ * @param _req - The express Request (unintentionally not used, "_*"
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getAllEmployees = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const employees: Employee[] = await employeeService.getAllEmployees();
+
+        res.status(HTTP_STATUS.OK).json({
+            message: "Employees retrieved successfully",
+            data: employees,
+        });
+    } catch (error: unknown) {
+        next(error);
+    }
+}

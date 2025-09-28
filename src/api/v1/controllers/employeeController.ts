@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { employees, Employee } from "../../../data/employee";
+import { Employee } from "../../../data/employee";
 import * as employeeService from "../services/employeeService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
 
@@ -33,13 +33,14 @@ export const createEmployee = async (
         const missingFields: string[] = requiredFields.filter((field) => {
             return req.body[field] === undefined || 
             req.body[field] === null ||
-            req.body[field] === "";
+            req.body[field] === "" ||
+            (typeof req.body[field] === "string" && req.body[field].trim() === "");
         });
 
         // If any required fields are missing, respond with 400.
         if (missingFields.length > 0) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: `Missing required fields: ${missingFields.join(",")}`,
+                message: `Missing required fields: ${missingFields.join(", ")}`,
             });
             return;
         }

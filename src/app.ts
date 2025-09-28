@@ -4,14 +4,20 @@ import express, { Express } from "express";
 // Importing morgan for logging
 import morgan from "morgan"; 
 
-// import itemRoutes
+// import employeeRoutes
 import employeeRoutes from "./api/v1/routes/employeeRoutes";
 
 // initialize the express application
 const app: Express = express();
 
+// Middleware START
 // Use Morgan for HTTP request logging
 app.use(morgan("combined"));
+
+// Ensures incoming body is correctly parsed to JSON, otherwise req.body would be undefined
+app.use(express.json());
+
+// Middleware END
 
 // respond to GET request at endpoint "/" with message
 app.get("/", (_req, res) => {

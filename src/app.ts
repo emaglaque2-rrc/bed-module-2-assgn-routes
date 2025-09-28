@@ -5,7 +5,7 @@ import express, { Express } from "express";
 import morgan from "morgan"; 
 
 // import itemRoutes
-import itemRoutes from "./api/v1/routes/itemRoutes";
+import employeeRoutes from "./api/v1/routes/employeeRoutes";
 
 // initialize the express application
 const app: Express = express();
@@ -18,7 +18,7 @@ app.get("/", (_req, res) => {
     res.send("Hello, world!");
 });
 
-app.use('/api/v1/items', itemRoutes);
+app.use('/api/v1/employees', employeeRoutes);
 
 app.get("/api/v1/health", (_req, res) => {
     res.json({

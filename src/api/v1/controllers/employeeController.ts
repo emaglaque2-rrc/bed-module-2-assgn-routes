@@ -88,4 +88,35 @@ export const getAllEmployees = async (
     } catch (error: unknown) {
         next(error);
     }
-}
+};
+
+/**
+ * Retrieves an employee by their ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getEmployeeById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const employee: Employee | undefined = await employeeService.getEmployeeById(Number(id));
+
+        if (employee) {
+            res.status(HTTP_STATUS.OK).json({
+                message: `Employee ${id} found successfully`,
+                data: employee,
+            });
+        } else {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `Employee with ID ${id} not found`,
+            });
+        }
+    } catch (error: unknown) {
+        next(error);
+    }
+};

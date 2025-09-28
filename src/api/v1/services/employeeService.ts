@@ -27,3 +27,11 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
     return structuredClone(employees);
 };
 
+/**
+ * Returns an employee by their ID.
+ * @param id - ID of the employee to retrieve.
+ * @returns The employee specified by ID, or undefined if not found.
+ */
+export const getEmployeeById = async (id: number): Promise<Employee | undefined> => {
+    return structuredClone(employees.find((emp: Employee) => emp.id === id));
+} 

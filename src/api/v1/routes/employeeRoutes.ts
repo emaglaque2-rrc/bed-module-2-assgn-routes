@@ -8,6 +8,8 @@ router.post("/", employeeController.createEmployee);
 
 router.get("/", employeeController.getAllEmployees);
 
+router.get("/:id", employeeController.getEmployeeById);
+
 router.put("/:id", (_req, res) => {
   res.send("Update an employee");
 });

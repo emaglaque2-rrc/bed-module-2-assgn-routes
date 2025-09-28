@@ -34,4 +34,30 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
  */
 export const getEmployeeById = async (id: number): Promise<Employee | undefined> => {
     return structuredClone(employees.find((emp: Employee) => emp.id === id));
-} 
+};
+
+/**
+ * Updates (replaces) an existing employee by their ID.
+ * @param id - The ID of the employee to update.
+ * @param employeeData - The fields to update. (Partial type used)
+ * @returns The updated Employee.
+ * @throws Error if employee with given ID is not found.
+ */
+export const updateEmployee = async (
+    id: number,
+    // CITATION FOR PARTIAL TYPE: https://www.w3schools.com/typescript/typescript_utility_types.php
+    employeeData: Partial<Omit<Employee, "id">>
+): Promise<Employee> => {
+    const employeeIndex = employees.findIndex((emp: Employee) => emp.id === id);
+
+    if (employeeIndex === -1) {
+        throw new Error(`Employee with ID ${id} not found`);
+    }
+
+    employees[employeeIndex] = {
+        ...employees[employeeIndex],
+        ...employeeData,
+    };
+
+    return structuredClone(employees[employeeIndex]);
+};

@@ -12,8 +12,6 @@ router.get("/:id", employeeController.getEmployeeById);
 
 router.put("/:id", employeeController.updateEmployee);
 
-router.delete("/:id", (_req, res) => {
-  res.send("Delete an employee");
-});
+router.delete("/:id", employeeController.deleteEmployee);
 
 export default router;

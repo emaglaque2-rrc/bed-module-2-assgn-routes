@@ -186,3 +186,43 @@ export const updateEmployee = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to delete an employee by ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const deleteEmployee = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+): Promise<void> => {
+    try {
+        const idParam: string | undefined = req.params.id;
+        const id: number = Number(idParam);;
+
+        // Checks if ID is provided at all
+        if (!idParam) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Missing employee ID in request parameters."
+            });
+            return;
+        }
+
+        if (isNaN(id)) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Invalid employee ID. ID must be a number."
+            });
+            return;
+        }
+
+        await employeeService.deleteEmployee(id);
+        res.status(HTTP_STATUS.OK).json({
+            message: `Employee with ID ${id} deleted successfully.`
+        });
+
+        } catch (error: unknown) {
+        next(error);
+    }
+};

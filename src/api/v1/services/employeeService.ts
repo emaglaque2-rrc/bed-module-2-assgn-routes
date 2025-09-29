@@ -45,7 +45,6 @@ export const getEmployeeById = async (id: number): Promise<Employee | undefined>
  */
 export const updateEmployee = async (
     id: number,
-    // CITATION FOR PARTIAL TYPE: https://www.w3schools.com/typescript/typescript_utility_types.php
     employeeData: Partial<Omit<Employee, "id">>
 ): Promise<Employee> => {
     const employeeIndex = employees.findIndex((emp: Employee) => emp.id === id);

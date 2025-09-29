@@ -10,9 +10,7 @@ router.get("/", employeeController.getAllEmployees);
 
 router.get("/:id", employeeController.getEmployeeById);
 
-router.put("/:id", (_req, res) => {
-  res.send("Update an employee");
-});
+router.put("/:id", employeeController.updateEmployee);
 
 router.delete("/:id", (_req, res) => {
   res.send("Delete an employee");

@@ -4,23 +4,23 @@ import * as employeeService from "../services/employeeService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
 
 // Defines the type for incoming request body (excluding ID)
-type CreateEmployeeBody = Omit<Employee, "id">;
+type EmployeeBody = Omit<Employee, "id">;
 
 /**
  * Manages requests, responses, and validations to create a new employee
- * @param req - The express Request, with body of type CreateEmployeeBody
+ * @param req - The express Request, with body of type EmployeeBody
  * @param res - The express Response
  * @param next - The express middleware chaining function
  * @returns 
  */
 export const createEmployee = async (
-    req: Request<{}, {}, CreateEmployeeBody>,
+    req: Request<{}, {}, EmployeeBody>,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
     try {
         // Basic validation - check for required fields
-        const requiredFields: (keyof CreateEmployeeBody)[] = [
+        const requiredFields: (keyof EmployeeBody)[] = [
             "name",
             "position",
             "department",
@@ -31,10 +31,12 @@ export const createEmployee = async (
 
         // Check for missing fields
         const missingFields: string[] = requiredFields.filter((field) => {
-            return req.body[field] === undefined || 
-            req.body[field] === null ||
-            req.body[field] === "" ||
-            (typeof req.body[field] === "string" && req.body[field].trim() === "");
+            const value = req.body[field];
+            return (value === undefined || 
+                value === null ||
+                value === "" ||
+                (typeof value === "string" && value.trim() === "")
+            );
         });
 
         // If any required fields are missing, respond with 400.
@@ -46,7 +48,7 @@ export const createEmployee = async (
         }
 
         // Extract only the fields we want (destructuring)
-        const { name, position, department, email, phone, branchId }: CreateEmployeeBody = req.body;
+        const { name, position, department, email, phone, branchId }: EmployeeBody = req.body;
 
         // Call the service layer
         const newEmployee: Employee = await employeeService.createEmployee({
@@ -116,6 +118,70 @@ export const getEmployeeById = async (
                 message: `Employee with ID ${id} not found`,
             });
         }
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+/**
+ * Manages requests and responses to update an existing employee by ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const updateEmployee = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        // Just converting id to number for use in service layer
+        const id: number = Number(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Invalid employee ID. ID must be a number."});
+                return;
+        }
+
+        // An array of required fields for validation
+        // CITATION FOR keyof usage: https://www.w3schools.com/typescript/typescript_keyof.php
+        const requiredFields: (keyof Omit<Employee, "id">)[] = [
+            "name",
+            "position",
+            "department",
+            "email",
+            "phone",
+            "branchId"
+        ];
+
+        // Validations
+        const updates: Partial<Omit<Employee, "id">> = {};
+        for (const key of requiredFields) {
+            const value = req.body[key];
+            if (
+                value !== undefined &&
+                value !== null &&
+                (typeof value !== "string" || value.trim() !== "")
+            ) {
+                updates[key] = typeof value === "string" ? value.trim() : value;
+            }
+        };
+
+        if (Object.keys(updates).length === 0) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "At least one valid field must be provided to update."
+            });
+            return;
+        }
+
+        // All fields valid, call service.
+        const updatedEmployee: Employee = await employeeService.updateEmployee(id, updates);
+
+        res.status(HTTP_STATUS.OK).json({
+            message: "Employee updated successfully.",
+            data: updatedEmployee,
+        });
     } catch (error: unknown) {
         next(error);
     }

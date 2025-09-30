@@ -237,7 +237,7 @@ describe("Employee Controller", () => {
             // Assert
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: `Employee with ID ${mockReq.params.id} not found.`
+                message: `Employee with ID 444 not found.`
             });
         });
     });

@@ -56,4 +56,34 @@ describe("Employee Routes", () => {
         });
     });
 
+    describe("PUT /api/v1/employees/:id", () => {
+        it("should call updateEmployee controller with valid data", async () => {
+            // Arrange
+            const employeeId = 1;
+            const updates = {
+                phone: "204-991-0044"
+            };
+
+            // Act
+            await request(app).put(`/api/v1/employees/${employeeId}`).send(updates);
+
+            // Assert
+            expect(employeeController.updateEmployee).toHaveBeenCalled
+        });
+    });
+
+    describe("DELETE /api/v1/employees/:id", () => {
+        it("should call deleteEmployee controller with valid data", async () => {
+            // Arrange 
+            const employeeId = 1; 
+
+            // Act
+            await request(app).delete(`/api/v1/employees/${employeeId}`);
+
+
+            // Assert
+            expect(employeeController.deleteEmployee).toHaveBeenCalled();
+        });
+    });
+
 });

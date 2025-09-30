@@ -71,6 +71,29 @@ describe("Employee Controller", () => {
                 data: [],
             });
         });
-        
+    });
+
+    // Test for createEmployee
+    describe("createEmployee", () => {
+        it("should return 201 and success message", async () => {
+            // Arrange
+            mockReq.body = mockEmployee;
+            (employeeService.createEmployee as jest.Mock).mockResolvedValue(mockEmployee);
+
+            // Act
+            await employeeController.createEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Employee created successfully",
+                data: mockEmployee,
+            });
+        });
+
     });
 });

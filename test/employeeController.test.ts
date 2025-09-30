@@ -95,5 +95,23 @@ describe("Employee Controller", () => {
             });
         });
 
+        it("should return 400 if required fields are missing", async () => {
+            // Arrange
+            mockReq.body = {};
+
+            // Act
+            await employeeController.createEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Missing required fields: name, position, department, email, phone, branchId", 
+            });
+        });
+
     });
 });

@@ -136,5 +136,24 @@ describe("Employee Controller", () => {
                 data: mockEmployee,
             });
         });
+
+        it("should return 404 if employee not found", async () => {
+            // Arrange
+            mockReq.params = { id: "999" };
+            (employeeService.getEmployeeById as jest.Mock).mockResolvedValue(undefined);
+
+            // Act
+            await employeeController.getEmployeeById(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Employee with ID ${mockReq.params.id} not found`,
+            });
+        });
     });
 });

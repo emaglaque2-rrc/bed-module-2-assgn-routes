@@ -181,6 +181,23 @@ describe("Employee Controller", () => {
             });
         });
 
+        it("should return 400 if update body is missing", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            mockReq.body = {};
 
+            // Act
+            await employeeController.updateEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "At least one valid field must be provided to update.",
+            });
+        });
     });
 });

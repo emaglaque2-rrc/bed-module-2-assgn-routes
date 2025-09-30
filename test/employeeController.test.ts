@@ -53,6 +53,24 @@ describe("Employee Controller", () => {
             });
         });
 
+        it("should return 200 and empty list if no employees found", async () => {
+            // Arrange
+            (employeeService.getAllEmployees as jest.Mock).mockResolvedValue([]);
 
+            // Act
+            await employeeController.getAllEmployees(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Employees retrieved successfully",
+                data: [],
+            });
+        });
+        
     });
 });

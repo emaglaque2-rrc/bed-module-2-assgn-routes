@@ -200,4 +200,26 @@ describe("Employee Controller", () => {
             });
         });
     });
+
+    // Test for deleteEmployee
+    describe("deleteEmployee", () => {
+        it("should return 200 and success message", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            (employeeService.deleteEmployee as jest.Mock).mockResolvedValue(true);
+
+            // Act
+            await employeeController.deleteEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Employee with ID ${mockReq.params.id} deleted successfully.`
+            });
+        });
+    });
 });

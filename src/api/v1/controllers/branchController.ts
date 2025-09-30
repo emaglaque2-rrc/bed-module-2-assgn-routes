@@ -5,6 +5,12 @@ import { HTTP_STATUS } from "../../../constants/httpConstants";
 
 type BranchBody = Omit<Branch, "id">;
 
+/**
+ * Manages requests, responses, and validations to create a new branch
+ * @param req - The express Request, with body of type BranchBody
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
 export const createBranch = async (
     req: Request<{}, {}, BranchBody>,
     res: Response,
@@ -50,6 +56,30 @@ export const createBranch = async (
             message: "Branch created successfully",
             data: newBranch
         });
+    } catch (error: unknown) {
+        next(error);
+    }
+};
+
+/**
+ * Manages requests and responses to retrieve all branches.
+ * @param _req - The express Request (uninentionally not used, "_*")
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getAllBranches = async (
+    _req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const branches: Branch[] = await branchService.getAllBranches();
+
+        res.status(HTTP_STATUS.OK).json({
+            message: "Branches retrieved successfully",
+            data: branches,
+        });
+
     } catch (error: unknown) {
         next(error);
     }

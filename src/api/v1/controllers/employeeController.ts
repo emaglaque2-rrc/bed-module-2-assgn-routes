@@ -11,7 +11,6 @@ type EmployeeBody = Omit<Employee, "id">;
  * @param req - The express Request, with body of type EmployeeBody
  * @param res - The express Response
  * @param next - The express middleware chaining function
- * @returns 
  */
 export const createEmployee = async (
     req: Request<{}, {}, EmployeeBody>,
@@ -225,7 +224,7 @@ export const deleteEmployee = async (
             });
             return;
         }
-        
+
         res.status(HTTP_STATUS.OK).json({
             message: `Employee with ID ${id} deleted successfully.`
         });

@@ -6,4 +6,6 @@ const router: Router = express.Router();
 // Base path will be prefixed with "/api/v1/branches" from app.ts
 router.post("/", branchController.createBranch);
 
+router.get("/", branchController.getAllBranches);
+
 export default router;

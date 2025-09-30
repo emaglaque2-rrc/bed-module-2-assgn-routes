@@ -17,3 +17,11 @@ export const createBranch = async (branchData: Omit<Branch, "id">):
         branches.push(newBranch);
         return structuredClone(newBranch);
 };
+
+/**
+ * Retrieves all branches from storage
+ * @returns Array of Branches, containing ID, name, address, and phone.
+ */
+export const getAllBranches = async (): Promise<Branch[]> => {
+    return structuredClone(branches);
+};

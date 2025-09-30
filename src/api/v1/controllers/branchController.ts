@@ -84,3 +84,35 @@ export const getAllBranches = async (
         next(error);
     }
 };
+
+/**
+ * Retrieves a branch by it's ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getBranchById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { id } = req.params;
+
+        const branch: Branch | undefined = await branchService.getBranchById(Number(id));
+
+        if (branch) {
+            res.status(HTTP_STATUS.OK).json({
+                message: `Branch with ID ${id} found successfully`,
+                data: branch,
+            });
+        } else {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `Branch with ID ${id} not found`,
+            });
+        }
+
+    } catch (error: unknown) {
+        next(error);
+    }
+};

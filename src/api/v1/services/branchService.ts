@@ -25,3 +25,12 @@ export const createBranch = async (branchData: Omit<Branch, "id">):
 export const getAllBranches = async (): Promise<Branch[]> => {
     return structuredClone(branches);
 };
+
+/**
+ * Returns a branch by it's ID.
+ * @param id - ID of the branch to retrieve.
+ * @returns The branch specified by ID, or undefined if not found.
+ */
+export const getBranchById = async (id: number): Promise<Branch | undefined> => {
+    return structuredClone(branches.find((branch: Branch) => branch.id === id));
+};

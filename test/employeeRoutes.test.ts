@@ -43,4 +43,17 @@ describe("Employee Routes", () => {
         });
     });
 
+    describe("GET /api/v1/employees/:id", () => {
+        it("should call getEmployeeById controller", async () => {
+            // Arrange
+            const employeeId = 1;
+
+            // Act
+            await request(app).get(`/api/v1/employees/${employeeId}`);
+
+            // Assert
+            expect(employeeController.getEmployeeById).toHaveBeenCalled();
+        });
+    });
+
 });

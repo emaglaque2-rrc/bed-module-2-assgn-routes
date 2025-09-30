@@ -16,12 +16,31 @@ describe("Employee Routes", () => {
         jest.clearAllMocks();
     })
 
-    describe("GET /api/v1/employees", () => {
+    describe("GET /api/v1/employees/", () => {
         it("should call getAllEmployees controller", async () => {
             await request(app).get("/api/v1/employees");
             expect(employeeController.getAllEmployees).toHaveBeenCalled();
         });
     });
 
+    describe("POST /api/v1/employees/", () => {
+        it("should call createEmployee controller with valid data", async () => {
+            // Arrange
+            const mockEmployee = {
+                name: "Derek Sabourin",
+                position: "Instructor",
+                department: "ACE Department",
+                email: "derek.sabourin@rrc.com",
+                phone: "204-991-991",
+                branchId: 4
+            };
+
+            // Act
+            await request(app).post("/api/v1/employees/").send(mockEmployee);
+
+            // Assert
+            expect(employeeController.createEmployee).toHaveBeenCalled();
+        });
+    });
 
 });

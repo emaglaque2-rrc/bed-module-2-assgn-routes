@@ -217,7 +217,15 @@ export const deleteEmployee = async (
             return;
         }
 
-        await employeeService.deleteEmployee(id);
+        const deleted = await employeeService.deleteEmployee(id);
+
+        if (!deleted) {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `Employee with ID ${id} not found.`
+            });
+            return;
+        }
+        
         res.status(HTTP_STATUS.OK).json({
             message: `Employee with ID ${id} deleted successfully.`
         });

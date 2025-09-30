@@ -64,15 +64,15 @@ export const updateEmployee = async (
 /**
  * Delete an employee from storage.
  * @param id - The ID of the employee to delete.
- * @throws Error if employee with given ID is not found.
+ * @returns True if the employee was deleted, false if not found.
  */
-export const deleteEmployee = async (id: number): Promise<void> => {
+export const deleteEmployee = async (id: number): Promise<boolean> => {
     const index: number = employees.findIndex((emp: Employee) => emp.id === id);
 
     if (index === -1) {
-        throw new Error(`Employee with ID ${id} not found`);
+        return false;
     }
 
     employees.splice(index, 1);
-
+    return true;
 };

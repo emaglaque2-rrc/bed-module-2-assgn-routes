@@ -221,5 +221,24 @@ describe("Employee Controller", () => {
                 message: `Employee with ID ${mockReq.params.id} deleted successfully.`
             });
         });
+
+        it("should return 404 and error if employee isn't found", async () => {
+            // Arrange
+            mockReq.params = { id: "444" };
+            (employeeService.deleteEmployee as jest.Mock).mockResolvedValue(false);
+
+            // Act
+            await employeeController.deleteEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Employee with ID ${mockReq.params.id} not found.`
+            });
+        });
     });
 });

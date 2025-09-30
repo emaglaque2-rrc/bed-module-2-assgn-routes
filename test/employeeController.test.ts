@@ -156,4 +156,31 @@ describe("Employee Controller", () => {
             });
         });
     });
+
+    // Test for updateEmployee
+    describe("updateEmployee", () => {
+        it("should return 200 and updated employee data", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            mockReq.body = { position: "Back-end Instructor" };
+            const updatedEmployee = { ...mockEmployee, ... mockReq.body };
+            (employeeService.updateEmployee as jest.Mock).mockResolvedValue(updatedEmployee);
+
+            // Act
+            await employeeController.updateEmployee(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Employee updated successfully.",
+                data: updatedEmployee,
+            });
+        });
+
+
+    });
 });

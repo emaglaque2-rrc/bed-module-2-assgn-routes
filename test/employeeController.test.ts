@@ -114,4 +114,27 @@ describe("Employee Controller", () => {
         });
 
     });
+
+    // Test for getEmployeeById
+    describe("getEmployeeById", () => {
+        it("should return 200 and employee data", async () => {
+            // Arrange 
+            mockReq.params = { id: "1" };
+            (employeeService.getEmployeeById as jest.Mock).mockResolvedValue(mockEmployee);
+
+            // Act
+            await employeeController.getEmployeeById(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Employee ${mockEmployee.id} found successfully`,
+                data: mockEmployee,
+            });
+        });
+    });
 });

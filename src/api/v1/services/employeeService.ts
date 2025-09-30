@@ -8,7 +8,7 @@ let nextId = employees.length + 1;
  * @returns The newly created Employee, including system generated ID.
  */
 export const createEmployee = async (employeeData: Omit<Employee, "id">):
-     Promise<Employee> => {
+    Promise<Employee> => {
         const newEmployee: Employee = { 
             id: nextId++,
             ...employeeData

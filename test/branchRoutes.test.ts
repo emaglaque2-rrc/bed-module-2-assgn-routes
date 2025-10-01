@@ -53,5 +53,19 @@ describe("Branch Routes", () => {
         });
     });
 
-    
+    describe("PUT /api/v1/branches/:id", () => {
+        it("should call updateBranch controller with valid data", async () => {
+            // Arrange
+            const branchId = 1;
+            const updates = {
+                name: "RRC Notre Dame Campus"
+            };
+
+            // Act
+            await request(app).put(`/api/v1/branches/${branchId}`).send(updates);
+
+            // Assert
+            expect(branchController.updateBranch).toHaveBeenCalled();
+        });
+    });
 });

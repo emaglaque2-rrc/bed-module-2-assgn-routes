@@ -59,3 +59,19 @@ export const updateBranch = async (
 
     return structuredClone(branches[branchIndex]);
 };
+
+/**
+ * Delete a branch from storage.
+ * @param id - The ID of the branch to delete
+ * @returns True if the branch was deleted, false if not found.
+ */
+export const deleteBranch = async (id: number): Promise<boolean> => {
+    const branchIndex = branches.findIndex((branch: Branch) => branch.id === id);
+
+    if (branchIndex === -1) {
+        return false;
+    }
+
+    branches.splice(branchIndex, 1);
+    return true;
+};

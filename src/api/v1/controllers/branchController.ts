@@ -179,3 +179,51 @@ export const updateBranch = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to delete a branch by ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const deleteBranch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const idParam: string | undefined = req.params.id;
+        const id: number = Number(idParam);
+
+        // Checks if ID is provided at all
+        if (!idParam) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Missing branch ID in request parameters."
+            });
+            return;
+        }
+
+        if (isNaN(id)) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Invalid branch ID. ID must be a number."
+            });
+            return;
+        }
+
+        const deleted = await branchService.deleteBranch(id);
+
+        if (!deleted) {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `Branch with ID ${id} not found.`
+            });
+            return;
+        }
+
+        res.status(HTTP_STATUS.OK).json({
+            message: `Branch with ID ${id} deleted successfully.`
+        });
+
+    } catch (error: unknown) {
+        next(error);
+    }
+};

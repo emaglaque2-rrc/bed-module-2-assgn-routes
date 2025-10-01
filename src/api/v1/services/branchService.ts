@@ -34,3 +34,28 @@ export const getAllBranches = async (): Promise<Branch[]> => {
 export const getBranchById = async (id: number): Promise<Branch | undefined> => {
     return structuredClone(branches.find((branch: Branch) => branch.id === id));
 };
+
+/**
+ * Updates (replaces) an existing branch by it's ID.
+ * @param id - The ID of the branch to update.
+ * @param branchData - The fields to update.
+ * @returns The updated Branch.
+ * @throws Error if branch with given ID is not found.
+ */
+export const updateBranch = async (
+    id: number,
+    branchData: Partial<Omit<Branch, "id">>
+): Promise<Branch> => {
+    const branchIndex = branches.findIndex((branch: Branch) => branch.id === id);
+
+    if (branchIndex === -1) {
+        throw new Error(`Branch with ID ${id} not found`);
+    }
+
+    branches[branchIndex] = {
+        ...branches[branchIndex],
+        ...branchData,
+    };
+
+    return structuredClone(branches[branchIndex]);
+};

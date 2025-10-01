@@ -116,3 +116,66 @@ export const getBranchById = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to update an existing branch by ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const updateBranch = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        // Just converting id to number for use in service layer
+        const id: number = Number(req.params.id);
+
+        if (isNaN(id)) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Invalid branch ID. ID must be a number."});
+            return;
+        }
+
+        // An array of required fields for validation
+        // CITATION FOR keyof usage: https://www.w3schools.com/typescript/typescript_keyof.php
+        const requiredFields: (keyof Omit<Branch, "id">)[] = [
+            "name",
+            "address",
+            "phone"
+        ];
+
+        // Validations
+        const updates: Partial<Omit<Branch, "id">> = {};
+
+        for (const key of requiredFields) {
+            const value = req.body[key];
+            if (
+                value !== undefined &&
+                value !== null &&
+                (typeof value !== "string" || value.trim() !== "")
+            ) {
+                updates[key] = typeof value === "string" ? value.trim() : value;
+            }
+        };
+
+        if (Object.keys(updates).length === 0) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "At least one valid field must be provided to update."
+            });
+            return;
+        }
+
+        // All fields valid, call service.
+        const updatedBranch: Branch = await branchService.updateBranch(id, updates);
+
+        res.status(HTTP_STATUS.OK).json({
+            message: "Branch updated successfully.",
+            data: updatedBranch,
+        });
+
+    } catch (error: unknown) {
+        next(error);
+    }
+};

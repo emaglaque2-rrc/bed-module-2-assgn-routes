@@ -39,7 +39,7 @@ export const getEmployeeById = async (id: number): Promise<Employee | undefined>
 /**
  * Updates (replaces) an existing employee by their ID.
  * @param id - The ID of the employee to update.
- * @param employeeData - The fields to update. (Partial type used)
+ * @param employeeData - The fields to update.
  * @returns The updated Employee.
  * @throws Error if employee with given ID is not found.
  */

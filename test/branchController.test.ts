@@ -110,4 +110,46 @@ describe("Branch Controller", () => {
             });
         });
     });
+
+    // Test for getBranchById
+    describe("getBranchById", () => {
+        it("should return 200 and branch data", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            (branchService.getBranchById as jest.Mock).mockResolvedValue(mockBranch);
+
+            // Act
+            await branchController.getBranchById(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Branch with ID 1 found successfully`,
+                data: mockBranch,
+            });
+        });
+
+        it("should return 404 if branch not found", async () => {
+            // Arrange
+            mockReq.params = { id: "999" };
+            (branchService.getBranchById as jest.Mock).mockResolvedValue(undefined);
+
+            // Act
+            await branchController.getBranchById(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Branch with ID 999 not found`,
+            });
+        });
+    });
 });

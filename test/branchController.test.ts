@@ -152,4 +152,48 @@ describe("Branch Controller", () => {
             });
         });
     });
+
+    // Test for updateBranch
+    describe("updateBranch", () => {
+        it("should return 200 and updated branch data", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            mockReq.body = { name: "RRC Notre Dame Campus" };
+            const updatedBranch = { ...mockBranch, ...mockReq.body };
+            (branchService.updateBranch as jest.Mock).mockResolvedValue(updatedBranch);
+
+            // Act
+            await branchController.updateBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch updated successfully.",
+                data: updatedBranch,
+            });
+        });
+
+        it("should return 400 if update body is missing", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            mockReq.body = {};
+
+            // Act
+            await branchController.updateBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "At least one valid field must be provided to update.",
+            });
+        });
+    });
 });

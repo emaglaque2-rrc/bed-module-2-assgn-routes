@@ -69,4 +69,45 @@ describe("Branch Controller", () => {
             });
         });
     });
-})
+
+    // Test for createBranch
+    describe("createBranch", () => {
+        it("should return 201 and success message", async () => {
+            // Arrange
+            mockReq.body = mockBranch;
+            (branchService.createBranch as jest.Mock).mockResolvedValue(mockBranch);
+
+            // Act
+            await branchController.createBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branch created successfully",
+                data: mockBranch,
+            });
+        });
+
+        it("should return 400 if required fields are missing", async () => {
+            // Arrange
+            mockReq.body = {};
+
+            // Act
+            await branchController.createBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Missing required fields: name, address, phone",
+            });
+        });
+    });
+});

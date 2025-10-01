@@ -194,6 +194,47 @@ describe("Branch Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "At least one valid field must be provided to update.",
             });
+        });    
+    });
+
+    // Test for deleteBranch
+    describe("deleteBranch", () => {
+        it("should return 200 and success message", async () => {
+            // Arrange
+            mockReq.params = { id: "1" };
+            (branchService.deleteBranch as jest.Mock).mockResolvedValue(true);
+
+            // Act
+            await branchController.deleteBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Branch with ID 1 deleted successfully.`,
+            });
+        });
+
+        it("should return 404 and error if branch isn't found", async () => {
+            // Arrange
+            mockReq.params = { id: "999" };
+            (branchService.deleteBranch as jest.Mock).mockResolvedValue(false);
+
+            // Act
+            await branchController.deleteBranch(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+            
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: `Branch with ID 999 not found.`
+            });
         });
     });
 });

@@ -68,4 +68,17 @@ describe("Branch Routes", () => {
             expect(branchController.updateBranch).toHaveBeenCalled();
         });
     });
+
+    describe("DELETE /api/v1/branches/:id", () => {
+        it("should call deleteBranch controller with valid data", async () => {
+            // Arrange
+            const branchId = 1;
+
+            // Act
+            await request(app).delete(`/api/v1/branches/${branchId}`);
+
+            // Assert
+            expect(branchController.deleteBranch).toHaveBeenCalled();
+        });
+    });
 });

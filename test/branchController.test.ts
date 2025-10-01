@@ -49,5 +49,24 @@ describe("Branch Controller", () => {
                 data: [mockBranch],
             });
         });
+
+        it("should return 200 and empty list if no branches found", async () => {
+            // Arrange
+            (branchService.getAllBranches as jest.Mock).mockResolvedValue([]);
+
+            // Act
+            await branchController.getAllBranches(
+                mockReq as Request,
+                mockRes as Response,
+                mockNext
+            );
+
+            // Assert
+            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                message: "Branches retrieved successfully",
+                data: [],
+            });
+        });
     });
 })

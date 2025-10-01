@@ -39,4 +39,19 @@ describe("Branch Routes", () => {
             expect(branchController.createBranch).toHaveBeenCalled();
         });
     });
+
+    describe("GET /api/v1/branches/:id", () => {
+        it("should call getBranchById controller", async () => {
+            // Arrange
+            const branchId = 1;
+
+            // Act
+            await request(app).get(`/api/v1/branches/${branchId}`);
+
+            // Assert
+            expect(branchController.getBranchById).toHaveBeenCalled();
+        });
+    });
+
+    
 });

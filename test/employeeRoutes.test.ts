@@ -119,7 +119,7 @@ describe("Employee Routes", () => {
     describe("GET /api/v1/employees/department/:department", () => {
         it("should call getEmployeesByDepartment controller with valid department", async () => {
             // Arrange
-            const department = "ACE Department";
+            const department: string = "ACE Department";
 
             // Act
             await request(app).get(`/api/v1/employees/department/${department}`);
@@ -130,7 +130,7 @@ describe("Employee Routes", () => {
 
         it("should handle missing department parameter", async () => {
             // Arrange
-            const department = "";
+            const department: string = "";
 
             // Act
             await request(app).get(`/api/v1/employees/department/${department}`);

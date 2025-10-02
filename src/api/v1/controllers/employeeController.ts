@@ -161,17 +161,18 @@ export const updateEmployee = async (
             
             // Handle string fields
             if (key !== "branchId" && typeof value === "string" && value.trim() !== "") {
-                (updates as any)[key] = value;
+                const typedKey = key as keyof Omit<Employee, "id" | "branchId">;
+                updates[typedKey] = value;
             }
             
             // Handle branchId (number field)
             if (key === "branchId" && (typeof value === "number" || typeof value === "string")) {
-                const numValue = Number(value);
+                const numValue: number = Number(value);
                 if (!isNaN(numValue)) {
                     updates[key] = numValue;
                 }
             }
-        };
+        }
 
         if (Object.keys(updates).length === 0) {
             res.status(HTTP_STATUS.BAD_REQUEST).json({

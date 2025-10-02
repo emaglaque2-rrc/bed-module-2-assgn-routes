@@ -9,6 +9,8 @@ jest.mock("../src/api/v1/controllers/employeeController", () => ({
     getEmployeeById: jest.fn((_req, res) => res.status(HTTP_STATUS.OK).send()),
     updateEmployee: jest.fn((_req, res) => res.status(HTTP_STATUS.OK).send()),
     deleteEmployee: jest.fn((_req, res) => res.status(HTTP_STATUS.OK).send()),
+    getEmployeesByBranchId: jest.fn((_req, res) => res.status(HTTP_STATUS.OK).send()),
+    getEmployeesByDepartment: jest.fn((_req, res) => res.status(HTTP_STATUS.OK).send()),
 }));
 
 describe("Employee Routes", () => {
@@ -68,7 +70,7 @@ describe("Employee Routes", () => {
             await request(app).put(`/api/v1/employees/${employeeId}`).send(updates);
 
             // Assert
-            expect(employeeController.updateEmployee).toHaveBeenCalled
+            expect(employeeController.updateEmployee).toHaveBeenCalled();
         });
     });
 
@@ -85,5 +87,32 @@ describe("Employee Routes", () => {
             expect(employeeController.deleteEmployee).toHaveBeenCalled();
         });
     });
+
+    describe("GET /api/v1/employees/branch/:branchId", () => {
+        it("should call getEmployeesByBranchId controller with valid branchId", async () => {
+            // Arrange
+            const branchId = 4;
+
+            // Act
+            await request(app).get(`/api/v1/employees/branch/${branchId}`);
+
+            // Assert
+            expect(employeeController.getEmployeesByBranchId).toHaveBeenCalled();
+        });
+
+        it("should handle missing branchId parameter", async () => {
+            // Act
+            const branchId = "";
+
+            // Act
+            await request(app).get(`/api/v1/employees/branch/${branchId}`);
+
+            // Assert
+            // no call should be made to the controller thats why I included ".not"
+            expect(employeeController.getEmployeesByBranchId).not.toHaveBeenCalled();
+        });
+    });
+
+    
 
 });

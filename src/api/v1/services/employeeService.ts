@@ -76,3 +76,13 @@ export const deleteEmployee = async (id: number): Promise<boolean> => {
     employees.splice(index, 1);
     return true;
 };
+
+/**
+ * Get all employees for a specific branch.
+ * @param branchId - The ID of the branch to get employees for.
+ * @returns An array of employees belonging to the specified branch.
+ */
+export const getEmployeesByBranchId = async (branchId: number): Promise<Employee[]> => {
+    const branchEmployee: Employee[] = employees.filter((employee: Employee) => employee.branchId === branchId);
+    return structuredClone(branchEmployee);
+};

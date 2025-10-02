@@ -233,3 +233,43 @@ export const deleteEmployee = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to retrieve employees by branch ID.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getEmployeesByBranchId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { branchId } = req.params;
+        const id: number = Number(branchId);
+
+        if (isNaN(id)) {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Invalid branch ID. ID must be a number."
+            });
+            return;
+        }
+
+        const employeesByBranch: Employee[] = await employeeService.getEmployeesByBranchId(id);
+
+        if (employeesByBranch.length > 0) {
+            res.status(HTTP_STATUS.OK).json({
+                message: `Employees for branch ID ${id} retrieved successfully.`,
+                data: employeesByBranch,
+            });
+        } else {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `No employees found for branch ID ${id}.`
+            });
+        }
+
+    } catch (error: unknown) {
+        next(error);
+    }
+};

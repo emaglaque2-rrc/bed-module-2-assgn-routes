@@ -16,4 +16,6 @@ router.delete("/:id", employeeController.deleteEmployee);
 
 router.get("/branch/:branchId", employeeController.getEmployeesByBranchId);
 
+router.get("/department/:department", employeeController.getEmployeesByDepartment);
+
 export default router;

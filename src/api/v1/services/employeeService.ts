@@ -86,3 +86,16 @@ export const getEmployeesByBranchId = async (branchId: number): Promise<Employee
     const branchEmployee: Employee[] = employees.filter((employee: Employee) => employee.branchId === branchId);
     return structuredClone(branchEmployee);
 };
+
+/**
+ * Retrieves all employees in the specified department.
+ * @param department - The department to filter employees by.
+ * @returns An array of employees in the specified department.
+ */
+export const getEmployeesByDepartment = async (department: string): Promise<Employee[]> => {
+    const departmentEmployees: Employee[] = employees.filter(
+        (employee: Employee) => employee.department.toLowerCase() === department.toLowerCase()
+    );
+
+    return structuredClone(departmentEmployees);
+};

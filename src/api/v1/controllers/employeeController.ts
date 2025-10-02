@@ -273,3 +273,43 @@ export const getEmployeesByBranchId = async (
         next(error);
     }
 };
+
+/**
+ * Manages requests and responses to retrieve employees by department.
+ * @param req - The express Request
+ * @param res - The express Response
+ * @param next - The express middleware chaining function
+ */
+export const getEmployeesByDepartment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<void> => {
+    try {
+        const { department } = req.params;
+
+        // Basic validation
+        if (!department || department.trim() === "") {
+            res.status(HTTP_STATUS.BAD_REQUEST).json({
+                message: "Department is required and cannot be empty."
+            });
+            return;
+        }
+
+        const employeesByDepartment: Employee[] = await employeeService.getEmployeesByDepartment(department);
+
+        if (employeesByDepartment.length > 0) {
+            res.status(HTTP_STATUS.OK).json({
+                message: `Employees in department ${department} retrieved successfully.`,
+                data: employeesByDepartment,
+            });
+        } else {
+            res.status(HTTP_STATUS.NOT_FOUND).json({
+                message: `No employees found for department: ${department}.`
+            });
+        }
+        
+    } catch (error: unknown) {
+        next(error);
+    }
+};

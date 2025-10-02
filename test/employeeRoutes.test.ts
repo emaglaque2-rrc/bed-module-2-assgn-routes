@@ -108,11 +108,35 @@ describe("Employee Routes", () => {
             await request(app).get(`/api/v1/employees/branch/${branchId}`);
 
             // Assert
-            // no call should be made to the controller thats why I included ".not"
+            // no call should be made to the controller thats why I 
+            // included ".not" because there's missing branch ID parameter.
             expect(employeeController.getEmployeesByBranchId).not.toHaveBeenCalled();
         });
     });
 
-    
+    describe("GET /api/v1/employees/department/:department", () => {
+        it("should call getEmployeesByDepartment controller with valid department", async () => {
+            // Arrange
+            const department = "ACE Department";
 
+            // Act
+            await request(app).get(`/api/v1/employees/department/${department}`);
+
+            // Assert
+            expect(employeeController.getEmployeesByDepartment).toHaveBeenCalled();
+        });
+
+        it("should handle missing department parameter", async () => {
+            // Arrange
+            const department = "";
+
+            // Act
+            await request(app).get(`/api/v1/employees/department/${department}`);
+
+            // Assert
+            // no call should be made to the controller thats why I 
+            // included ".not" because there's missing department parameter.
+            expect(employeeController.getEmployeesByDepartment).not.toHaveBeenCalled();
+        });
+    });
 });

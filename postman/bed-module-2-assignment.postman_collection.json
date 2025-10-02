@@ -334,6 +334,57 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "additional-endpoints",
+			"item": [
+				{
+					"name": "getEmployeesByDepartment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/employees/department/management",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"employees",
+								"department",
+								"management"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getEmployeesByBranchId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/employees/branch/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"employees",
+								"branch",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

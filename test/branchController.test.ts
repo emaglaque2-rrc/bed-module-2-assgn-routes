@@ -46,7 +46,14 @@ describe("Branch Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branches retrieved successfully",
-                data: [mockBranch],
+                data: [
+                    {
+                    id: 1,
+                    name: "RRC Notre Dame Campus",
+                    address: "2055 Notre Dame Ave, Winnipeg, MB R3H 0J9",
+                    phone: "991"
+                }
+                ],
             });
         });
 
@@ -88,7 +95,12 @@ describe("Branch Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branch created successfully",
-                data: mockBranch,
+                data: {
+                    id: 1,
+                    name: "RRC Notre Dame Campus",
+                    address: "2055 Notre Dame Ave, Winnipeg, MB R3H 0J9",
+                    phone: "991"
+                },
             });
         });
 
@@ -129,7 +141,12 @@ describe("Branch Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: `Branch with ID 1 found successfully`,
-                data: mockBranch,
+                data: {
+                    id: 1,
+                    name: "RRC Notre Dame Campus",
+                    address: "2055 Notre Dame Ave, Winnipeg, MB R3H 0J9",
+                    phone: "991"
+                },
             });
         });
 
@@ -158,7 +175,7 @@ describe("Branch Controller", () => {
         it("should return 200 and updated branch data", async () => {
             // Arrange
             mockReq.params = { id: "1" };
-            mockReq.body = { name: "RRC Notre Dame Campus" };
+            mockReq.body = { name: "RRC Notre Dame Campus is much better than EDC" };
             const updatedBranch = { ...mockBranch, ...mockReq.body };
             (branchService.updateBranch as jest.Mock).mockResolvedValue(updatedBranch);
 
@@ -173,7 +190,12 @@ describe("Branch Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Branch updated successfully.",
-                data: updatedBranch,
+                data: {
+                    id: 1,
+                    name: "RRC Notre Dame Campus is much better than EDC",
+                    address: "2055 Notre Dame Ave, Winnipeg, MB R3H 0J9",
+                    phone: "991"
+                },
             });
         });
 

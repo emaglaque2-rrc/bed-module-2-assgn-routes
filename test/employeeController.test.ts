@@ -49,7 +49,17 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees retrieved successfully",
-                data: [mockEmployee],
+                data: [
+                    {
+                        id: 1,
+                        name: "Alice Johnson",
+                        position: "Branch Manager",
+                        department: "Management",
+                        email: "alice.johnson@pixell-river.com",
+                        phone: "604-555-0148",
+                        branchId: 1,
+                    }
+                ],
             });
         });
 
@@ -91,7 +101,15 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.CREATED);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee created successfully",
-                data: mockEmployee,
+                data: {
+                        id: 1,
+                        name: "Alice Johnson",
+                        position: "Branch Manager",
+                        department: "Management",
+                        email: "alice.johnson@pixell-river.com",
+                        phone: "604-555-0148",
+                        branchId: 1,
+                    },
             });
         });
 
@@ -133,7 +151,15 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: `Employee ${mockEmployee.id} found successfully`,
-                data: mockEmployee,
+                data: {
+                        id: 1,
+                        name: "Alice Johnson",
+                        position: "Branch Manager",
+                        department: "Management",
+                        email: "alice.johnson@pixell-river.com",
+                        phone: "604-555-0148",
+                        branchId: 1,
+                    },
             });
         });
 
@@ -177,7 +203,15 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee updated successfully.",
-                data: updatedEmployee,
+                data: {
+                    id: 1,
+                    name: "Alice Johnson",
+                    position: "Back-end Instructor",
+                    department: "Management",
+                    email: "alice.johnson@pixell-river.com",
+                    phone: "604-555-0148",
+                    branchId: 1,
+                },
             });
         });
 

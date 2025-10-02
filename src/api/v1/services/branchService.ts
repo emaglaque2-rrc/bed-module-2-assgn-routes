@@ -1,6 +1,6 @@
 import { Branch, branches } from "../../../data/branches";
 
-let branchId = branches.length + 1;
+let branchId: number = branches.length + 1;
 
 /**
  * Creates a new branch.
@@ -46,7 +46,7 @@ export const updateBranch = async (
     id: number,
     branchData: Partial<Omit<Branch, "id">>
 ): Promise<Branch> => {
-    const branchIndex = branches.findIndex((branch: Branch) => branch.id === id);
+    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
 
     if (branchIndex === -1) {
         throw new Error(`Branch with ID ${id} not found`);
@@ -66,7 +66,7 @@ export const updateBranch = async (
  * @returns True if the branch was deleted, false if not found.
  */
 export const deleteBranch = async (id: number): Promise<boolean> => {
-    const branchIndex = branches.findIndex((branch: Branch) => branch.id === id);
+    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
 
     if (branchIndex === -1) {
         return false;

@@ -176,7 +176,7 @@ describe("Branch Controller", () => {
             // Arrange
             mockReq.params = { id: "1" };
             mockReq.body = { name: "RRC Notre Dame Campus is much better than EDC" };
-            const updatedBranch = { ...mockBranch, ...mockReq.body };
+            const updatedBranch: Branch = { ...mockBranch, ...mockReq.body };
             (branchService.updateBranch as jest.Mock).mockResolvedValue(updatedBranch);
 
             // Act

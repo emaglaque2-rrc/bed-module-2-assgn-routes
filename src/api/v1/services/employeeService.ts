@@ -1,6 +1,6 @@
 import { employees, Employee } from "../../../data/employee";
 
-let nextId = employees.length + 1;
+let nextId: number = employees.length + 1;
 
 /**
  * Creates a new employee
@@ -47,7 +47,7 @@ export const updateEmployee = async (
     id: number,
     employeeData: Partial<Omit<Employee, "id">>
 ): Promise<Employee> => {
-    const employeeIndex = employees.findIndex((emp: Employee) => emp.id === id);
+    const employeeIndex: number = employees.findIndex((emp: Employee) => emp.id === id);
 
     if (employeeIndex === -1) {
         throw new Error(`Employee with ID ${id} not found`);

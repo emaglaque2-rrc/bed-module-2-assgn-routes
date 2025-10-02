@@ -2,6 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import * as branchController from "../src/api/v1/controllers/branchController";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
+import { Branch } from "../src/data/branches";
 
 jest.mock("../src/api/v1/controllers/branchController", () => ({
     createBranch: jest.fn((_req, res) => res.status(HTTP_STATUS.CREATED).send()),
@@ -26,7 +27,8 @@ describe("Branch Routes", () => {
     describe("POST /api/v1/branches/", () => {
         it("should call createBranch controller with valid data", async () => {
             // Arrange
-            const mockBranch = {
+            const mockBranch: Branch = {
+                id: 1,
                 name: "RRC Main Campus",
                 address: "2055 Notre Dame Ave, Winnipeg, MB R3H 0J9",
                 phone: "991"
@@ -43,7 +45,7 @@ describe("Branch Routes", () => {
     describe("GET /api/v1/branches/:id", () => {
         it("should call getBranchById controller", async () => {
             // Arrange
-            const branchId = 1;
+            const branchId: number = 1;
 
             // Act
             await request(app).get(`/api/v1/branches/${branchId}`);
@@ -56,8 +58,8 @@ describe("Branch Routes", () => {
     describe("PUT /api/v1/branches/:id", () => {
         it("should call updateBranch controller with valid data", async () => {
             // Arrange
-            const branchId = 1;
-            const updates = {
+            const branchId: number = 1;
+            const updates: Partial<Branch> = {
                 name: "RRC Notre Dame Campus"
             };
 
@@ -72,7 +74,7 @@ describe("Branch Routes", () => {
     describe("DELETE /api/v1/branches/:id", () => {
         it("should call deleteBranch controller with valid data", async () => {
             // Arrange
-            const branchId = 1;
+            const branchId: number = 1;
 
             // Act
             await request(app).delete(`/api/v1/branches/${branchId}`);

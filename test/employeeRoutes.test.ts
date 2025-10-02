@@ -2,6 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import * as employeeController from "../src/api/v1/controllers/employeeController";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
+import { Employee } from "../src/data/employee";
 
 jest.mock("../src/api/v1/controllers/employeeController", () => ({
     createEmployee: jest.fn((_req, res) => res.status(HTTP_STATUS.CREATED).send()),
@@ -28,7 +29,8 @@ describe("Employee Routes", () => {
     describe("POST /api/v1/employees/", () => {
         it("should call createEmployee controller with valid data", async () => {
             // Arrange
-            const mockEmployee = {
+            const mockEmployee: Employee = {
+                id: 1,
                 name: "Derek Sabourin",
                 position: "Instructor",
                 department: "ACE Department",
@@ -48,7 +50,7 @@ describe("Employee Routes", () => {
     describe("GET /api/v1/employees/:id", () => {
         it("should call getEmployeeById controller", async () => {
             // Arrange
-            const employeeId = 1;
+            const employeeId: number = 1;
 
             // Act
             await request(app).get(`/api/v1/employees/${employeeId}`);
@@ -61,8 +63,8 @@ describe("Employee Routes", () => {
     describe("PUT /api/v1/employees/:id", () => {
         it("should call updateEmployee controller with valid data", async () => {
             // Arrange
-            const employeeId = 1;
-            const updates = {
+            const employeeId: number = 1;
+            const updates: Partial<Employee> = {
                 phone: "204-991-0044"
             };
 
@@ -77,7 +79,7 @@ describe("Employee Routes", () => {
     describe("DELETE /api/v1/employees/:id", () => {
         it("should call deleteEmployee controller with valid data", async () => {
             // Arrange 
-            const employeeId = 1; 
+            const employeeId: number = 1; 
 
             // Act
             await request(app).delete(`/api/v1/employees/${employeeId}`);
@@ -91,7 +93,7 @@ describe("Employee Routes", () => {
     describe("GET /api/v1/employees/branch/:branchId", () => {
         it("should call getEmployeesByBranchId controller with valid branchId", async () => {
             // Arrange
-            const branchId = 4;
+            const branchId: number = 4;
 
             // Act
             await request(app).get(`/api/v1/employees/branch/${branchId}`);
@@ -102,7 +104,7 @@ describe("Employee Routes", () => {
 
         it("should handle missing branchId parameter", async () => {
             // Act
-            const branchId = "";
+            const branchId: string = "";
 
             // Act
             await request(app).get(`/api/v1/employees/branch/${branchId}`);

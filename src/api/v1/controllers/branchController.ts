@@ -12,7 +12,7 @@ type BranchBody = Omit<Branch, "id">;
  * @param next - The express middleware chaining function
  */
 export const createBranch = async (
-    req: Request<{}, {}, BranchBody>,
+    req: Request<object, object, BranchBody>,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
@@ -26,7 +26,7 @@ export const createBranch = async (
 
         // Check for missing fields
         const missingFields: string[] = requiredFields.filter((field) => {
-            const value = req.body[field];
+            const value: unknown = req.body[field];
             return (value === undefined ||
                 value === null ||
                 value === "" ||
@@ -150,13 +150,12 @@ export const updateBranch = async (
         const updates: Partial<Omit<Branch, "id">> = {};
 
         for (const key of requiredFields) {
-            const value = req.body[key];
+            const value: unknown = req.body[key];
             if (
-                value !== undefined &&
-                value !== null &&
-                (typeof value !== "string" || value.trim() !== "")
+                typeof value === "string" &&
+                value.trim() !== ""
             ) {
-                updates[key] = typeof value === "string" ? value.trim() : value;
+                updates[key] = value;
             }
         };
 
@@ -210,7 +209,7 @@ export const deleteBranch = async (
             return;
         }
 
-        const deleted = await branchService.deleteBranch(id);
+        const deleted: boolean = await branchService.deleteBranch(id);
 
         if (!deleted) {
             res.status(HTTP_STATUS.NOT_FOUND).json({

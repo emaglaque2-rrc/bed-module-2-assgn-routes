@@ -189,7 +189,7 @@ describe("Employee Controller", () => {
             // Arrange
             mockReq.params = { id: "1" };
             mockReq.body = { position: "Back-end Instructor" };
-            const updatedEmployee = { ...mockEmployee, ... mockReq.body };
+            const updatedEmployee: Employee = { ...mockEmployee, ...mockReq.body };
             (employeeService.updateEmployee as jest.Mock).mockResolvedValue(updatedEmployee);
 
             // Act

@@ -13,7 +13,7 @@ type EmployeeBody = Omit<Employee, "id">;
  * @param next - The express middleware chaining function
  */
 export const createEmployee = async (
-    req: Request<{}, {}, EmployeeBody>,
+    req: Request<object, object, EmployeeBody>,
     res: Response,
     next: NextFunction
 ): Promise<void> => {
@@ -30,7 +30,7 @@ export const createEmployee = async (
 
         // Check for missing fields
         const missingFields: string[] = requiredFields.filter((field) => {
-            const value = req.body[field];
+            const value: unknown = req.body[field];
             return (value === undefined || 
                 value === null ||
                 value === "" ||
@@ -156,14 +156,20 @@ export const updateEmployee = async (
 
         // Validations
         const updates: Partial<Omit<Employee, "id">> = {};
-        for (const key of requiredFields) {
-            const value = req.body[key];
-            if (
-                value !== undefined &&
-                value !== null &&
-                (typeof value !== "string" || value.trim() !== "")
-            ) {
-                updates[key] = typeof value === "string" ? value.trim() : value;
+        for (const key of requiredFields) { 
+            const value: unknown = req.body[key];
+            
+            // Handle string fields
+            if (key !== "branchId" && typeof value === "string" && value.trim() !== "") {
+                (updates as any)[key] = value;
+            }
+            
+            // Handle branchId (number field)
+            if (key === "branchId" && (typeof value === "number" || typeof value === "string")) {
+                const numValue = Number(value);
+                if (!isNaN(numValue)) {
+                    updates[key] = numValue;
+                }
             }
         };
 
@@ -216,7 +222,7 @@ export const deleteEmployee = async (
             return;
         }
 
-        const deleted = await employeeService.deleteEmployee(id);
+        const deleted: boolean = await employeeService.deleteEmployee(id);
 
         if (!deleted) {
             res.status(HTTP_STATUS.NOT_FOUND).json({

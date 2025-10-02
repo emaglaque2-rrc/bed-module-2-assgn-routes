@@ -161,7 +161,7 @@ export const updateEmployee = async (
             
             // Handle string fields
             if (key !== "branchId" && typeof value === "string" && value.trim() !== "") {
-                const typedKey = key as keyof Omit<Employee, "id" | "branchId">;
+                const typedKey: keyof Omit<Employee, "id" | "branchId"> = key as keyof Omit<Employee, "id" | "branchId">;
                 updates[typedKey] = value;
             }
             

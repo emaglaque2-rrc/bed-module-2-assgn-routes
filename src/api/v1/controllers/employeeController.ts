@@ -206,7 +206,7 @@ export const deleteEmployee = async (
 ): Promise<void> => {
     try {
         const idParam: string | undefined = req.params.id;
-        const id: number = Number(idParam);;
+        const id: number = Number(idParam);
 
         // Checks if ID is provided at all
         if (!idParam) {

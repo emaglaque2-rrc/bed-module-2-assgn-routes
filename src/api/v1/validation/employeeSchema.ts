@@ -68,4 +68,14 @@ export const employeeSchemas = {
         })
     },
 
+    // GET /api/v1/employees/:id - Retrieve a single Employee by ID
+    getById: {
+        params: Joi.object({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Employee ID is required",
+                "number.base": "Employee ID must be a number",
+            }),
+        }),
+    },
+
 };

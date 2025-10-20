@@ -89,7 +89,7 @@ export const employeeSchemas = {
     },
 
     // GET /api/v1/employees/branch/:branchId - Retrieve Employees by Branch ID
-    getByBranchId: {
+    getEmployeesByBranchId: {
         params: Joi.object({
             branchId: Joi.number().integer().required().messages({
                 "any.required": "Branch ID is required",
@@ -99,7 +99,7 @@ export const employeeSchemas = {
     },
 
     // GET /api/v1/employees/department/:department - Retrieve Employees by Department
-    getByDepartment: {
+    getEmployeesByDepartment: {
         params: Joi.object({
             department: Joi.string().required().messages({
                 "any.required": "Department is required",

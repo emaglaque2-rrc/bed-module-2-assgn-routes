@@ -31,5 +31,24 @@ export const branchSchemas = {
         }),
     },
 
-    
-}
+    // PUT /api/v1/branches/:id - Update existing Branch
+    update: {
+        params: Joi.object({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Branch ID is required",
+                "number.base": "Branch ID must be a number",
+            }),
+        }),
+        body: Joi.object({
+            name: Joi.string().optional().messages({
+                "string.empty": "Branch name cannot be empty",
+            }),
+            address: Joi.string().optional().messages({
+                "string.empty": "Branch address cannot be empty",
+            }),
+            phone: Joi.string().optional().messages({
+                "string.empty": "Branch phone number cannot be empty",
+            }),
+        }),
+    },
+};

@@ -78,4 +78,14 @@ export const employeeSchemas = {
         }),
     },
 
+    // DELETE /api/v1/employees/:id - Delete an Employee by ID
+    delete: {
+        params: Joi.onject({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Employee ID is required",
+                "number.base": "Employee ID must be a number",
+            }),
+        }),
+    },
+
 };

@@ -98,4 +98,14 @@ export const employeeSchemas = {
         }),
     },
 
+    // GET /api/v1/employees/department/:department - Retrieve Employees by Department
+    getByDepartment: {
+        params: Joi.object({
+            department: Joi.string().required().messages({
+                "any.required": "Department is required",
+                "string.empty": "Department cannot be empty",
+            }),
+        }),
+    },
+
 };

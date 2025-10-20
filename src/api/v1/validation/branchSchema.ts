@@ -51,4 +51,14 @@ export const branchSchemas = {
             }),
         }),
     },
+
+    // DELETE /api/v1/branches/:id - Delete Branch by ID
+    delete: {
+        params: Joi.object({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Branch ID is required",
+                "number.base": "Branch ID must be a number",
+            }),
+        }),
+    },
 };

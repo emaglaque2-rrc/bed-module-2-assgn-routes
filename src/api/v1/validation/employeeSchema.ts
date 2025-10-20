@@ -80,10 +80,20 @@ export const employeeSchemas = {
 
     // DELETE /api/v1/employees/:id - Delete an Employee by ID
     delete: {
-        params: Joi.onject({
+        params: Joi.object({
             id: Joi.number().integer().required().messages({
                 "any.required": "Employee ID is required",
                 "number.base": "Employee ID must be a number",
+            }),
+        }),
+    },
+
+    // GET /api/v1/employees/branch/:branchId - Retrieve Employees by Branch ID
+    getByBranchId: {
+        params: Joi.object({
+            branchId: Joi.number().integer().required().messages({
+                "any.required": "Branch ID is required",
+                "number.base": "Branch ID must be a number",
             }),
         }),
     },

@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { getBranchById } from "../services/branchService";
 
 // Branch operation schemas organized by request part
 export const branchSchemas = {
@@ -19,4 +20,16 @@ export const branchSchemas = {
             }),
         }),
     },
+
+    // GET /api/v1/branches/:id - Get Branch by ID
+    getBranchById: {
+        params: Joi.object({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Branch ID is required",
+                "number.base": "Branch ID must be a number",
+            }),
+        }),
+    },
+
+    
 }

@@ -35,4 +35,37 @@ export const employeeSchemas = {
         }),
     },
 
+    // PUT /api/v1/employees/:id - Update existing Employee
+    update: {
+        params: Joi.object({
+            id: Joi.number().integer().required().messages({
+                "any.required": "Employee ID is required",
+                "number.base": "Employee ID must be a number",
+            }),
+        }),
+        body: Joi.object({
+            name: Joi.string().optional().messages({
+                "string.empty": "Employee name cannot be empty",
+            }),
+            position: Joi.string().optional().messages({
+                "string.empty": "Position cannot be empty",
+            }),
+            department: Joi.string().optional().messages({
+                "string.empty": "Department cannot be empty",
+            }),
+            // CITATION FOR EMAIL() USAGE: https://joi.dev/api/?v=17.13.3#stringemailoptions
+            email: Joi.string().email().optional().messages({
+                "string.email": "Email must be a valid email address",
+                "string.empty": "Email cannot be empty",
+            }),
+            phone: Joi.string().optional().messages({
+                "string.empty": "Phone number cannot be empty",
+            }),
+            // CITATION FOR NUMBER().INTEGER() USAGE: https://joi.dev/api/?v=17.13.3#numberinteger
+            branchId: Joi.number().integer().optional().messages({
+                "number.base": "Branch ID must be a number",
+            }),
+        })
+    },
+
 };

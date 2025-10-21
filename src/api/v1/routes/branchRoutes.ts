@@ -14,7 +14,11 @@ router.post(
     branchController.createBranch
 );
 
-router.get("/:id", branchController.getBranchById);
+router.get(
+    "/:id",
+    validateRequest(branchSchemas.getBranchById),
+    branchController.getBranchById
+);
 
 router.put("/:id", branchController.updateBranch);
 

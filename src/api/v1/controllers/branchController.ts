@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Branch } from "../models/branchModel";
 import * as branchService from "../services/branchService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
-import { successResponse, errorResponse } from "../models/responseModel";
+import { successResponse, errorResponse, ApiResponse } from "../models/responseModel";
 
 type BranchBody = Omit<Branch, "id">;
 
@@ -14,7 +14,7 @@ type BranchBody = Omit<Branch, "id">;
  */
 export const createBranch = async (
     req: Request<object, object, BranchBody>,
-    res: Response,
+    res: Response<ApiResponse<Branch | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -37,9 +37,9 @@ export const createBranch = async (
 
         // If any required fields are missing, respond with 400.
         if (missingFields.length > 0) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: `Missing required fields: ${missingFields.join(", ")}`,
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse(`Missing required fields: ${missingFields.join(", ")}`)
+            );
             return;
         }
 
@@ -69,7 +69,7 @@ export const createBranch = async (
  */
 export const getAllBranches = async (
     _req: Request,
-    res: Response,
+    res: Response<ApiResponse<Branch[]>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -92,7 +92,7 @@ export const getAllBranches = async (
  */
 export const getBranchById = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Branch | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -123,7 +123,7 @@ export const getBranchById = async (
  */
 export const updateBranch = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Branch | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -185,7 +185,7 @@ export const updateBranch = async (
  */
 export const deleteBranch = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<string | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {

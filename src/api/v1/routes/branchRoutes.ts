@@ -26,6 +26,10 @@ router.put(
     branchController.updateBranch
 );
 
-router.delete("/:id", branchController.deleteBranch);
+router.delete(
+    "/:id",
+    validateRequest(branchSchemas.delete),
+    branchController.deleteBranch
+);
 
 export default router;

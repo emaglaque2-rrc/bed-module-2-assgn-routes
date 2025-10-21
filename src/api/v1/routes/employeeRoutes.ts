@@ -38,6 +38,10 @@ router.get(
     employeeController.getEmployeesByBranchId
 );
 
-router.get("/department/:department", employeeController.getEmployeesByDepartment);
+router.get(
+    "/department/:department",
+    validateRequest(employeeSchemas.getEmployeesByDepartment),
+    employeeController.getEmployeesByDepartment
+);
 
 export default router;

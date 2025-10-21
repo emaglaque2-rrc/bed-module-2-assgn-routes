@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { Branch } from "../../../data/branches";
+import { Branch } from "../models/branchModel";
 import * as branchService from "../services/branchService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
+import { successResponse, errorResponse } from "../models/responseModel";
 
 type BranchBody = Omit<Branch, "id">;
 
@@ -52,10 +53,9 @@ export const createBranch = async (
             phone
         });
 
-        res.status(HTTP_STATUS.CREATED).json({
-            message: "Branch created successfully",
-            data: newBranch
-        });
+        res.status(HTTP_STATUS.CREATED).json(
+            successResponse(newBranch, "Branch created successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -75,10 +75,9 @@ export const getAllBranches = async (
     try {
         const branches: Branch[] = await branchService.getAllBranches();
 
-        res.status(HTTP_STATUS.OK).json({
-            message: "Branches retrieved successfully",
-            data: branches,
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(branches, "Branches retrieved successfully")
+        );
 
     } catch (error: unknown) {
         next(error);
@@ -102,14 +101,13 @@ export const getBranchById = async (
         const branch: Branch | undefined = await branchService.getBranchById(Number(id));
 
         if (branch) {
-            res.status(HTTP_STATUS.OK).json({
-                message: `Branch with ID ${id} found successfully`,
-                data: branch,
-            });
+            res.status(HTTP_STATUS.OK).json(
+                successResponse(branch, `Branch with ID ${id} found successfully`)
+            );
         } else {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `Branch with ID ${id} not found`,
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`Branch with ID ${id} not found`)
+            );
         }
 
     } catch (error: unknown) {
@@ -133,8 +131,9 @@ export const updateBranch = async (
         const id: number = Number(req.params.id);
 
         if (isNaN(id)) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Invalid branch ID. ID must be a number."});
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Invalid branch ID. ID must be a number.")
+            );
             return;
         }
 
@@ -160,19 +159,18 @@ export const updateBranch = async (
         };
 
         if (Object.keys(updates).length === 0) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "At least one valid field must be provided to update."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("At least one valid field must be provided to update.")
+            );
             return;
         }
 
         // All fields valid, call service.
         const updatedBranch: Branch = await branchService.updateBranch(id, updates);
 
-        res.status(HTTP_STATUS.OK).json({
-            message: "Branch updated successfully.",
-            data: updatedBranch,
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(updatedBranch, "Branch updated successfully.")
+        );
 
     } catch (error: unknown) {
         next(error);
@@ -196,31 +194,31 @@ export const deleteBranch = async (
 
         // Checks if ID is provided at all
         if (!idParam) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Missing branch ID in request parameters."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Missing branch ID in request parameters.")
+            );
             return;
         }
 
         if (isNaN(id)) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Invalid branch ID. ID must be a number."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Invalid branch ID. ID must be a number.")
+            );
             return;
         }
 
         const deleted: boolean = await branchService.deleteBranch(id);
 
         if (!deleted) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `Branch with ID ${id} not found.`
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`Branch with ID ${id} not found.`)
+            );
             return;
         }
 
-        res.status(HTTP_STATUS.OK).json({
-            message: `Branch with ID ${id} deleted successfully.`
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(`Branch with ID ${id} deleted successfully.`)
+        );
 
     } catch (error: unknown) {
         next(error);

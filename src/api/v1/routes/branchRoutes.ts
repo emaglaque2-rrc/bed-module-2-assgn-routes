@@ -20,7 +20,11 @@ router.get(
     branchController.getBranchById
 );
 
-router.put("/:id", branchController.updateBranch);
+router.put(
+    "/:id",
+    validateRequest(branchSchemas.update),
+    branchController.updateBranch
+);
 
 router.delete("/:id", branchController.deleteBranch);
 

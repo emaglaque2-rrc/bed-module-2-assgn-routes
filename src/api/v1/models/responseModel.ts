@@ -4,7 +4,7 @@
  */
 export interface ApiResponse<T> {
     status: string; // "success" or "error"
-    data?: T; // Optional data returned in case of success
+    data?: T | null; // Optional data returned in case of success
     message?: string; // Informational message about the result
     error?: string; // Error message in case of failure
     code?: string; // Optional error code for debugging

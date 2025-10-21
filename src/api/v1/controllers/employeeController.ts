@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { Employee } from "../../../data/employee";
+import { Employee } from "../models/employeeModel";
 import * as employeeService from "../services/employeeService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
+import { successResponse, errorResponse, ApiResponse } from "../models/responseModel";
 
 // Defines the type for incoming request body (excluding ID)
 type EmployeeBody = Omit<Employee, "id">;
@@ -14,7 +15,7 @@ type EmployeeBody = Omit<Employee, "id">;
  */
 export const createEmployee = async (
     req: Request<object, object, EmployeeBody>,
-    res: Response,
+    res: Response<ApiResponse<Employee | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -40,9 +41,9 @@ export const createEmployee = async (
 
         // If any required fields are missing, respond with 400.
         if (missingFields.length > 0) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: `Missing required fields: ${missingFields.join(", ")}`,
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse(`Missing required fields: ${missingFields.join(", ")}`)
+            );
             return;
         }
 
@@ -59,10 +60,9 @@ export const createEmployee = async (
             branchId: Number(branchId)
         });
 
-        res.status(HTTP_STATUS.CREATED).json({
-            message: "Employee created successfully",
-            data: newEmployee
-        });
+        res.status(HTTP_STATUS.CREATED).json(
+            successResponse(newEmployee, "Employee created successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -76,16 +76,15 @@ export const createEmployee = async (
  */
 export const getAllEmployees = async (
     _req: Request,
-    res: Response,
+    res: Response<ApiResponse<Employee[]>>,
     next: NextFunction
 ): Promise<void> => {
     try {
         const employees: Employee[] = await employeeService.getAllEmployees();
 
-        res.status(HTTP_STATUS.OK).json({
-            message: "Employees retrieved successfully",
-            data: employees,
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(employees, "Employees retrieved successfully")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -99,7 +98,7 @@ export const getAllEmployees = async (
  */
 export const getEmployeeById = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Employee | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -108,14 +107,13 @@ export const getEmployeeById = async (
         const employee: Employee | undefined = await employeeService.getEmployeeById(Number(id));
 
         if (employee) {
-            res.status(HTTP_STATUS.OK).json({
-                message: `Employee ${id} found successfully`,
-                data: employee,
-            });
+            res.status(HTTP_STATUS.OK).json(
+                successResponse(employee, `Employee ${id} found successfully`)
+            );
         } else {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `Employee with ID ${id} not found`,
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`Employee with ID ${id} not found`)
+            );
         }
     } catch (error: unknown) {
         next(error);
@@ -130,7 +128,7 @@ export const getEmployeeById = async (
  */
 export const updateEmployee = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Employee | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -138,8 +136,8 @@ export const updateEmployee = async (
         const id: number = Number(req.params.id);
 
         if (isNaN(id)) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Invalid employee ID. ID must be a number."});
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Invalid employee ID. ID must be a number."))
                 return;
         }
 
@@ -175,19 +173,18 @@ export const updateEmployee = async (
         }
 
         if (Object.keys(updates).length === 0) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "At least one valid field must be provided to update."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("At least one valid field must be provided to update.")
+            );
             return;
         }
 
         // All fields valid, call service.
         const updatedEmployee: Employee = await employeeService.updateEmployee(id, updates);
 
-        res.status(HTTP_STATUS.OK).json({
-            message: "Employee updated successfully.",
-            data: updatedEmployee,
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(updatedEmployee, "Employee updated successfully.")
+        );
     } catch (error: unknown) {
         next(error);
     }
@@ -201,7 +198,7 @@ export const updateEmployee = async (
  */
 export const deleteEmployee = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<string | null>>,
     next: NextFunction,
 ): Promise<void> => {
     try {
@@ -210,31 +207,31 @@ export const deleteEmployee = async (
 
         // Checks if ID is provided at all
         if (!idParam) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Missing employee ID in request parameters."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Missing employee ID in request parameters.")
+            );
             return;
         }
 
         if (isNaN(id)) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Invalid employee ID. ID must be a number."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Invalid employee ID. ID must be a number.")
+            );
             return;
         }
 
         const deleted: boolean = await employeeService.deleteEmployee(id);
 
         if (!deleted) {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `Employee with ID ${id} not found.`
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`Employee with ID ${id} not found.`)
+            );
             return;
         }
 
-        res.status(HTTP_STATUS.OK).json({
-            message: `Employee with ID ${id} deleted successfully.`
-        });
+        res.status(HTTP_STATUS.OK).json(
+            successResponse(`Employee with ID ${id} deleted successfully.`)
+        );
 
         } catch (error: unknown) {
         next(error);
@@ -249,7 +246,7 @@ export const deleteEmployee = async (
  */
 export const getEmployeesByBranchId = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Employee[] | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -257,23 +254,22 @@ export const getEmployeesByBranchId = async (
         const id: number = Number(branchId);
 
         if (isNaN(id)) {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Invalid branch ID. ID must be a number."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Invalid branch ID. ID must be a number.")
+            );
             return;
         }
 
         const employeesByBranch: Employee[] = await employeeService.getEmployeesByBranchId(id);
 
         if (employeesByBranch.length > 0) {
-            res.status(HTTP_STATUS.OK).json({
-                message: `Employees for branch ID ${id} retrieved successfully.`,
-                data: employeesByBranch,
-            });
+            res.status(HTTP_STATUS.OK).json(
+                successResponse(employeesByBranch, `Employees for branch ID ${id} retrieved successfully.`)
+            );
         } else {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `No employees found for branch ID ${id}.`
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`No employees found for branch ID ${id}.`)
+            );
         }
 
     } catch (error: unknown) {
@@ -289,7 +285,7 @@ export const getEmployeesByBranchId = async (
  */
 export const getEmployeesByDepartment = async (
     req: Request,
-    res: Response,
+    res: Response<ApiResponse<Employee[] | null>>,
     next: NextFunction
 ): Promise<void> => {
     try {
@@ -297,23 +293,22 @@ export const getEmployeesByDepartment = async (
 
         // Basic validation
         if (!department || department.trim() === "") {
-            res.status(HTTP_STATUS.BAD_REQUEST).json({
-                message: "Department is required and cannot be empty."
-            });
+            res.status(HTTP_STATUS.BAD_REQUEST).json(
+                errorResponse("Department is required and cannot be empty.")
+            );
             return;
         }
 
         const employeesByDepartment: Employee[] = await employeeService.getEmployeesByDepartment(department);
 
         if (employeesByDepartment.length > 0) {
-            res.status(HTTP_STATUS.OK).json({
-                message: `Employees in department ${department} retrieved successfully.`,
-                data: employeesByDepartment,
-            });
+            res.status(HTTP_STATUS.OK).json(
+                successResponse(employeesByDepartment, `Employees in department ${department} retrieved successfully.`)
+            );
         } else {
-            res.status(HTTP_STATUS.NOT_FOUND).json({
-                message: `No employees found for department: ${department}.`
-            });
+            res.status(HTTP_STATUS.NOT_FOUND).json(
+                errorResponse(`No employees found for department: ${department}.`)
+            );
         }
         
     } catch (error: unknown) {

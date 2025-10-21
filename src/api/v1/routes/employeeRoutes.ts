@@ -20,7 +20,11 @@ router.get(
     employeeController.getEmployeeById
 );
 
-router.put("/:id", employeeController.updateEmployee);
+router.put(
+    "/:id",
+    validateRequest(employeeSchemas.update),
+    employeeController.updateEmployee
+);
 
 router.delete("/:id", employeeController.deleteEmployee);
 

@@ -1,5 +1,4 @@
 import Joi from "joi";
-import { getBranchById } from "../services/branchService";
 
 // Branch operation schemas organized by request part
 export const branchSchemas = {

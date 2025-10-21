@@ -32,7 +32,11 @@ router.delete(
     employeeController.deleteEmployee
 );
 
-router.get("/branch/:branchId", employeeController.getEmployeesByBranchId);
+router.get(
+    "/branch/:branchId",
+    validateRequest(employeeSchemas.getEmployeesByBranchId),
+    employeeController.getEmployeesByBranchId
+);
 
 router.get("/department/:department", employeeController.getEmployeesByDepartment);
 

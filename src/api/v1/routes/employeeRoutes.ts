@@ -26,7 +26,11 @@ router.put(
     employeeController.updateEmployee
 );
 
-router.delete("/:id", employeeController.deleteEmployee);
+router.delete(
+    "/:id",
+    validateRequest(employeeSchemas.delete),
+    employeeController.deleteEmployee
+);
 
 router.get("/branch/:branchId", employeeController.getEmployeesByBranchId);
 

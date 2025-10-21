@@ -14,7 +14,11 @@ router.post(
     employeeController.createEmployee
 );
 
-router.get("/:id", employeeController.getEmployeeById);
+router.get(
+    "/:id",
+    validateRequest(employeeSchemas.getById),
+    employeeController.getEmployeeById
+);
 
 router.put("/:id", employeeController.updateEmployee);
 

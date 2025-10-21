@@ -41,5 +41,25 @@ describe("Branch Validation Middleware", () => {
         expect(mockRes.status).not.toHaveBeenCalled();
     });
 
-    
+    it("should fail validation when name is empty string", () => {
+        // Arrange
+        mockReq.body = {
+            name: "",
+            address: "123 Princess St, Winnipeg, MB",
+            phone: "204-991-2222",
+        };
+        const middleware: MiddlewareFunction = validateRequest(
+            branchSchemas.create
+        );
+
+        // Act
+        middleware(mockReq as Request, mockRes as Response, mockNext);
+
+        // Assert
+        expect(mockNext).not.toHaveBeenCalled();
+        expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
+        expect(mockRes.json).toHaveBeenCalledWith({
+            error: "Validation error: Body: Branch name cannot be empty",
+        });
+    });
 });

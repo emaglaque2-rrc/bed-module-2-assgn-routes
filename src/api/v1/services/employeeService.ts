@@ -72,8 +72,29 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
  * @param id - ID of the employee to retrieve.
  * @returns The employee specified by ID, or undefined if not found.
  */
-export const getEmployeeById = async (id: number): Promise<Employee | undefined> => {
-    return structuredClone(employees.find((emp: Employee) => emp.id === id));
+export const getEmployeeById = async (id: string): Promise<Employee> => {
+    try {
+        const doc: DocumentSnapshot = await getDocumentById(
+            COLLECTION_NAME,
+            id
+        );
+
+        if (!doc) {
+            throw new Error(`Employee with ID ${id} not found`);
+        }
+
+        const data: DocumentData | undefined = doc.data();
+        const employee: Employee = {
+            id: doc.id,
+            ...data,
+        } as Employee;
+
+        return structuredClone(employee);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error retrieving employee";
+        throw new Error(`Failed to retrieve employee with ID ${id}: ${errorMessage}`);
+    }
 };
 
 /**

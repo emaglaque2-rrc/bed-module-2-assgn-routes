@@ -128,3 +128,34 @@ export const updateDocument = async <T>(
         );
     }
 };
+
+/**
+ * Deletes a document from a specified Firestore collection.
+ * Can operate within a transaction if provided, otherwise performs a direct delete.
+ * @param {string} collectionName - The name of the collection.
+ * @param {string} id - The ID of the document to delete.
+ * @param {FirebaseFirestore.Transaction} [transaction] - Optional Firestore transaction.
+ * @returns {Promise<void>}
+ */
+export const deleteDocument = async (
+    collectionName: string,
+    id: string,
+    transaction?: FirebaseFirestore.Transaction
+): Promise<void> => {
+    try {
+        const docRef: FirebaseFirestore.DocumentReference = db
+            .collection(collectionName)
+            .doc(id);
+        if (transaction) {
+            transaction.delete(docRef);
+        } else {
+            await docRef.delete();
+        }
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(
+            `Failed to delete document ${id} from ${collectionName}: ${errorMessage}`
+        );
+    }
+};

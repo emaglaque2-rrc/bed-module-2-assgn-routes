@@ -61,3 +61,22 @@ export const createDocument = async <T>(
         );
     }
 };
+
+/**
+ * Retrieves all documents from a specified Firestore collection.
+ * @param {string} collectionName - The name of the collection.
+ * @returns {Promise<FirebaseFirestore.QuerySnapshot>} - A QuerySnapshot containing all documents.
+ */
+export const getDocuments = async (
+    collectionName: string
+): Promise<FirebaseFirestore.QuerySnapshot> => {
+    try {
+        return await db.collection(collectionName).get();
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(
+            `Failed to fetch documents from ${collectionName}: ${errorMessage}`
+        );
+    }
+};

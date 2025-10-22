@@ -69,8 +69,29 @@ export const getAllBranches = async (): Promise<Branch[]> => {
  * @param id - ID of the branch to retrieve.
  * @returns The branch specified by ID, or undefined if not found.
  */
-export const getBranchById = async (id: number): Promise<Branch | undefined> => {
-    return structuredClone(branches.find((branch: Branch) => branch.id === id));
+export const getBranchById = async (id: string): Promise<Branch> => {
+    try {
+        const doc: DocumentSnapshot | null = await getDocumentById(
+            COLLECTION_NAME,
+            id
+        );
+
+        if (!doc) {
+            throw new Error(`Branch with ID ${id} not found`);
+        }
+
+        const data: DocumentData | undefined = doc.data();
+        const branch: Branch = {
+            id: doc.id,
+            ...data,
+        } as Branch;
+
+        return structuredClone(branch);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(`Failed to retrieve branch with ID ${id}: ${errorMessage}`);
+    }
 };
 
 /**

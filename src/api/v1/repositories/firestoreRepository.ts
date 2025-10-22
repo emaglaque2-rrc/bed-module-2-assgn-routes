@@ -159,3 +159,51 @@ export const deleteDocument = async (
         );
     }
 };
+
+/**
+ * Deletes documents from a specified collection based on multiple field values.
+ * Can operate within a transaction if provided, otherwise performs a batch delete.
+ * @param {string} collectionName - The name of the collection to delete from.
+ * @param {FieldValuePair[]} fieldValuePairs - An array of field-value pairs to filter on.
+ * @param {FirebaseFirestore.Transaction} [transaction] - Optional Firestore transaction object.
+ * @returns {Promise<void>}
+ */
+export const deleteDocumentsByFieldValues = async (
+    collectionName: string,
+    fieldValuePairs: FieldValuePair[],
+    transaction?: FirebaseFirestore.Transaction
+): Promise<void> => {
+    try {
+        let query: FirebaseFirestore.Query = db.collection(collectionName);
+
+        // Apply all field-value filters
+        fieldValuePairs.forEach(({ fieldName, fieldValue }) => {
+            query = query.where(fieldName, "==", fieldValue);
+        });
+
+        let snapshot: FirebaseFirestore.QuerySnapshot;
+
+        if (transaction) {
+            snapshot = await transaction.get(query);
+            snapshot.docs.forEach((doc) => {
+                transaction.delete(doc.ref);
+            });
+        } else {
+            snapshot = await query.get();
+            const batch: FirebaseFirestore.WriteBatch = db.batch();
+            snapshot.docs.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+            await batch.commit();
+        }
+    } catch (error: unknown) {
+        const fieldValueString: string = fieldValuePairs
+            .map(({ fieldName, fieldValue }) => `${fieldName} == ${fieldValue}`)
+            .join(" AND ");
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(
+            `Failed to delete documents from ${collectionName} where ${fieldValueString}: ${errorMessage}`
+        );
+    }
+};

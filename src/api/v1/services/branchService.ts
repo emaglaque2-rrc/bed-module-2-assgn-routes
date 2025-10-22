@@ -3,6 +3,7 @@ import {
     QuerySnapshot,
     DocumentData,
     DocumentSnapshot,
+    Query,
 } from "firebase-admin/firestore";
 import { Branch } from "../../v1/models/branchModel";
 import {
@@ -32,7 +33,7 @@ export const createBranch = async (branchData: Omit<Branch, "id">):
                 COLLECTION_NAME,
                 newBranch
             );
-            
+
             return structuredClone({ id: branchId, ...newBranch } as Branch);
         } catch (error: unknown) {
             const message = 
@@ -46,7 +47,21 @@ export const createBranch = async (branchData: Omit<Branch, "id">):
  * @returns Array of Branches, containing ID, name, address, and phone.
  */
 export const getAllBranches = async (): Promise<Branch[]> => {
-    return structuredClone(branches);
+    try {
+        const snapshot: QuerySnapshot = await getDocuments(COLLECTION_NAME);
+        const branches: Branch[] = snapshot.docs.map((doc) => {
+            const data: DocumentData = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+            } as Branch;
+        });
+        return structuredClone(branches);
+    } catch (error: unknown) {
+        const errorMessage = 
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(`Failed to retrieve branches: ${errorMessage}`);
+    }
 };
 
 /**

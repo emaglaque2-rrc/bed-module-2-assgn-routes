@@ -207,3 +207,34 @@ export const deleteDocumentsByFieldValues = async (
         );
     }
 };
+
+/**
+ * Retrieves documents from a specified collection based on multiple field values.
+ * @param {string} collectionName - The name of the collection to query.
+ * @param {FieldValuePair[]} fieldValuePairs - An array of field-value pairs to filter on.
+ * @returns {Promise<FirebaseFirestore.QuerySnapshot>} - A QuerySnapshot containing matching documents.
+ */
+export const getDocumentsByFieldValues = async (
+    collectionName: string,
+    fieldValuePairs: FieldValuePair[]
+): Promise<FirebaseFirestore.QuerySnapshot> => {
+    try {
+        let query: FirebaseFirestore.Query = db.collection(collectionName);
+
+        // Apply all field-value filters
+        fieldValuePairs.forEach(({ fieldName, fieldValue }) => {
+            query = query.where(fieldName, "==", fieldValue);
+        });
+
+        return await query.get();
+    } catch (error: unknown) {
+        const fieldValueString: string = fieldValuePairs
+            .map(({ fieldName, fieldValue }) => `${fieldName} == ${fieldValue}`)
+            .join(" AND ");
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(
+            `Failed to fetch documents from ${collectionName} where ${fieldValueString}: ${errorMessage}`
+        );
+    }
+};

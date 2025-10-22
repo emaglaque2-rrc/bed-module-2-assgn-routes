@@ -200,9 +200,24 @@ export const getEmployeesByBranchId = async (branchId: string): Promise<Employee
  * @returns An array of employees in the specified department.
  */
 export const getEmployeesByDepartment = async (department: string): Promise<Employee[]> => {
-    const departmentEmployees: Employee[] = employees.filter(
-        (employee: Employee) => employee.department.toLowerCase() === department.toLowerCase()
-    );
+    try {
+        const snapshot: QuerySnapshot = await getDocumentsByFieldValues(
+            COLLECTION_NAME,
+            [{ fieldName: "department", fieldValue: department }]
+        );
 
-    return structuredClone(departmentEmployees);
+        const departmentEmployees: Employee[] = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+            } as Employee;
+        });
+
+        return structuredClone(departmentEmployees);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error retrieving employees by department";
+        throw new Error(`Failed to retrieve employees for department ${department}: ${errorMessage}`);
+    }
 };

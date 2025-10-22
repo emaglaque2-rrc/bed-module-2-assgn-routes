@@ -74,7 +74,7 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
  */
 export const getEmployeeById = async (id: string): Promise<Employee> => {
     try {
-        const doc: DocumentSnapshot = await getDocumentById(
+        const doc: DocumentSnapshot | null = await getDocumentById(
             COLLECTION_NAME,
             id
         );
@@ -105,21 +105,42 @@ export const getEmployeeById = async (id: string): Promise<Employee> => {
  * @throws Error if employee with given ID is not found.
  */
 export const updateEmployee = async (
-    id: number,
-    employeeData: Partial<Omit<Employee, "id">>
+    id: string,
+    employeeData: Pick<Employee,
+    "name" | "position" | "department" | "email" | "phone" | "branchId">
 ): Promise<Employee> => {
-    const employeeIndex: number = employees.findIndex((emp: Employee) => emp.id === id);
+    try {
+        // check if the employee exists before updating
+        const employee: Employee = await getEmployeeById(id);
 
-    if (employeeIndex === -1) {
-        throw new Error(`Employee with ID ${id} not found`);
+        if (!employee) {
+            throw new Error(`Employee with ID ${id} not found`);
+        }
+
+        // CITATION FOR OBJECT.ENTRIES USAGE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+        // AND ALSO IN ITEM DEMO FROM MOD 3.
+        // Filtering out undefined fields dynamically
+        const filteredUpdates = Object.fromEntries(
+            Object.entries(employeeData).filter(([_, value]) => value !== undefined)
+        );
+
+        const updatedEmployee: Employee = {
+            ...employee,
+            ...filteredUpdates,
+        };
+        
+        await updateDocument<Employee>(
+            COLLECTION_NAME,
+            id,
+            updatedEmployee
+        );
+
+        return structuredClone(updatedEmployee);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error updating employee";
+        throw new Error(`Failed to update employee with ID ${id}: ${errorMessage}`);
     }
-
-    employees[employeeIndex] = {
-        ...employees[employeeIndex],
-        ...employeeData,
-    };
-
-    return structuredClone(employees[employeeIndex]);
 };
 
 /**

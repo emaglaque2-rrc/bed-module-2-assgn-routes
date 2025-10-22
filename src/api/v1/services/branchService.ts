@@ -1,21 +1,44 @@
-import { Branch, branches } from "../../../data/branches";
+import { branches } from "../../../data/branches";
+import {
+    QuerySnapshot,
+    DocumentData,
+    DocumentSnapshot,
+} from "firebase-admin/firestore";
+import { Branch } from "../../v1/models/branchModel";
+import {
+    createDocument,
+    getDocuments,
+    getDocumentById,
+    updateDocument,
+    deleteDocument,
+} from "../repositories/firestoreRepository";
 
-let branchId: number = branches.length + 1;
+// reference to the Firestore collection name
+const COLLECTION_NAME: string = "branches";
 
 /**
  * Creates a new branch.
  * @param branchData Data for the new branch, excluding ID.
- * @returns The newly created Branch, including system generated ID.
+ * @returns The newly created Branch, including system (firestore) generated ID.
  */
 export const createBranch = async (branchData: Omit<Branch, "id">):
     Promise<Branch> => {
-        const newBranch: Branch = {
-            id: branchId++,
-            ...branchData
-        };
+        try {
+            const newBranch: Partial<Branch> = {
+                ...branchData,
+            }
 
-        branches.push(newBranch);
-        return structuredClone(newBranch);
+            const branchId: string = await createDocument<Branch>(
+                COLLECTION_NAME,
+                newBranch
+            );
+            
+            return structuredClone({ id: branchId, ...newBranch } as Branch);
+        } catch (error: unknown) {
+            const message = 
+                error instanceof Error ? error.message : "Unknown error creating branch";
+            throw new Error(`Failed to create branch: ${message}`);
+        }
 };
 
 /**

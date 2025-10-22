@@ -102,9 +102,42 @@ export const getBranchById = async (id: string): Promise<Branch> => {
  * @throws Error if branch with given ID is not found.
  */
 export const updateBranch = async (
-    id: number,
-    branchData: Partial<Omit<Branch, "id">>
+    id: string,
+    branchData: Pick<Branch, "name" | "address" | "phone">
 ): Promise<Branch> => {
+    try {
+        // check if the branch exists before updating
+        const branch: Branch = await getBranchById(id);
+
+        if (!branch) {
+            throw new Error(`Branch with ID ${id} not found`);
+        }
+
+        const updatedBranch: Branch = {
+            ...branch,
+            ...branchData,
+        };
+
+        // I went for the simple option to only update defined values
+        if (branchData.name !== undefined) {
+            updatedBranch.name = branchData.name;
+        }
+        if (branchData.address !== undefined) {
+            updatedBranch.address = branchData.address;
+        }
+        if (branchData.phone !== undefined) {
+            updatedBranch.phone = branchData.phone;
+        }
+
+        await updateDocument<Branch>(COLLECTION_NAME, id, updatedBranch);
+
+        return structuredClone(updatedBranch);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(`Failed to update branch with ID ${id}: ${errorMessage}`);
+    }
+
     const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
 
     if (branchIndex === -1) {

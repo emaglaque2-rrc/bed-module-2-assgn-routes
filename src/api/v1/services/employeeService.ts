@@ -147,16 +147,23 @@ export const updateEmployee = async (
  * Delete an employee from storage.
  * @param id - The ID of the employee to delete.
  * @returns True if the employee was deleted, false if not found.
+ * @throws Error if employee with given ID is not found.
  */
-export const deleteEmployee = async (id: number): Promise<boolean> => {
-    const index: number = employees.findIndex((emp: Employee) => emp.id === id);
+export const deleteEmployee = async (id: string): Promise<void> => {
+    try {
+        // check if the employee exists before deleting
+        const employee: Employee = await getEmployeeById(id);
 
-    if (index === -1) {
-        return false;
-    }
+        if (!employee) {
+            throw new Error(`Employee with ID ${id} not found`);
+        }
 
-    employees.splice(index, 1);
-    return true;
+        await deleteDocument(COLLECTION_NAME, id);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error deleting employee";
+        throw new Error(`Failed to delete employee with ID ${id}: ${errorMessage}`);
+    } 
 };
 
 /**

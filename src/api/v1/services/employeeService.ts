@@ -49,7 +49,22 @@ export const createEmployee = async (employeeData: Omit<Employee, "id">):
  * department, email, phone, and branchId.
  */
 export const getAllEmployees = async (): Promise<Employee[]> => {
-    return structuredClone(employees);
+    try {
+        const snapshot: QuerySnapshot = await getDocuments(COLLECTION_NAME);
+        const employees: Employee[] = snapshot.docs.map((doc) => {
+            const data: DocumentData = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+            } as Employee;
+        });
+
+        return structuredClone(employees);
+    } catch (error: unknown) {
+        const errorMessage = 
+            error instanceof Error ? error.message : "Unknown error retrieving employees";
+        throw new Error(`Failed to retrieve employees: ${errorMessage}`);
+    }
 };
 
 /**

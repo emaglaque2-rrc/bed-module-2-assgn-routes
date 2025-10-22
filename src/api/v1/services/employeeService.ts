@@ -1,21 +1,46 @@
-import { employees, Employee } from "../../../data/employee";
 
-let nextId: number = employees.length + 1;
+import {
+    QuerySnapshot,
+    DocumentData,
+    DocumentSnapshot,
+    Query,
+} from "firebase-admin/firestore";
+import { Employee } from "../models/employeeModel";
+import {
+    createDocument,
+    getDocuments,
+    getDocumentById,
+    updateDocument,
+    deleteDocument,
+    getDocumentsByFieldValues,
+} from "../repositories/firestoreRepository";
+
+// reference to the Firestore collection name
+const COLLECTION_NAME = "employees";
 
 /**
  * Creates a new employee
  * @param employeeData Data for the new employee, excluding ID.
- * @returns The newly created Employee, including system generated ID.
+ * @returns The newly created Employee, including system (firestore) generated ID.
  */
 export const createEmployee = async (employeeData: Omit<Employee, "id">):
     Promise<Employee> => {
-        const newEmployee: Employee = { 
-            id: nextId++,
-            ...employeeData
-        };
+        try {
+            const newEmployee: Partial<Employee> = {
+                ...employeeData,
+            };
 
-        employees.push(newEmployee);
-        return structuredClone(newEmployee);
+            const employeeId: string = await createDocument<Employee>(
+                COLLECTION_NAME,
+                newEmployee
+            );
+
+            return structuredClone({ id: employeeId, ...newEmployee } as Employee);
+        } catch (error: unknown) {
+            const message =
+            error instanceof Error ? error.message : "Unknown error creating employee";
+            throw new Error(`Failed to create employee: ${message}`);
+        }
 };
 
 /**

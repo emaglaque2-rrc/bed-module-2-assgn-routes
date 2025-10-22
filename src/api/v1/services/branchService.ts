@@ -1,4 +1,3 @@
-import { branches } from "../../../data/branches";
 import {
     QuerySnapshot,
     DocumentData,

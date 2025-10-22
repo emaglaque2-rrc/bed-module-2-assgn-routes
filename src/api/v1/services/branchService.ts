@@ -137,33 +137,25 @@ export const updateBranch = async (
             error instanceof Error ? error.message : "Unknown error";
         throw new Error(`Failed to update branch with ID ${id}: ${errorMessage}`);
     }
-
-    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
-
-    if (branchIndex === -1) {
-        throw new Error(`Branch with ID ${id} not found`);
-    }
-
-    branches[branchIndex] = {
-        ...branches[branchIndex],
-        ...branchData,
-    };
-
-    return structuredClone(branches[branchIndex]);
 };
 
 /**
- * Delete a branch from storage.
+ * Deletes a branch from Firestore.
  * @param id - The ID of the branch to delete
- * @returns True if the branch was deleted, false if not found.
+ * @throws Error if branch with given ID is not found.
  */
-export const deleteBranch = async (id: number): Promise<boolean> => {
-    const branchIndex: number = branches.findIndex((branch: Branch) => branch.id === id);
+export const deleteBranch = async (id: string): Promise<void> => {
+    try {
+        // Check if the branch exists before deleting
+        const branch: Branch = await getBranchById(id);
+        if (!branch) {
+            throw new Error(`Branch with ID ${id} not found`);
+        }
 
-    if (branchIndex === -1) {
-        return false;
+        await deleteDocument(COLLECTION_NAME, id);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
+        throw new Error(`Failed to delete branch with ID ${id}: ${errorMessage}`);
     }
-
-    branches.splice(branchIndex, 1);
-    return true;
-};
+}

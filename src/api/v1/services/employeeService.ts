@@ -171,9 +171,27 @@ export const deleteEmployee = async (id: string): Promise<void> => {
  * @param branchId - The ID of the branch to get employees for.
  * @returns An array of employees belonging to the specified branch.
  */
-export const getEmployeesByBranchId = async (branchId: number): Promise<Employee[]> => {
-    const branchEmployee: Employee[] = employees.filter((employee: Employee) => employee.branchId === branchId);
-    return structuredClone(branchEmployee);
+export const getEmployeesByBranchId = async (branchId: string): Promise<Employee[]> => {
+    try {
+        const snapshot: QuerySnapshot = await getDocumentsByFieldValues(
+            COLLECTION_NAME,
+            [{ fieldName: "branchId", fieldValue: branchId }]
+        );
+
+        const branchEmployees: Employee[] = snapshot.docs.map((doc) => {
+            const data: DocumentData = doc.data();
+            return {
+                id: doc.id,
+                ...data,
+            } as Employee;
+        });
+
+        return structuredClone(branchEmployees);
+    } catch (error: unknown) {
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error retrieving employees by branch ID";
+        throw new Error(`Failed to retrieve employees for branch ID ${branchId}: ${errorMessage}`);
+    }
 };
 
 /**

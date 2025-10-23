@@ -79,7 +79,7 @@ describe("Employee Controller", () => {
     describe("createEmployee", () => {
         it("should return 201 and success message", async () => {
             // Arrange
-            const mockBody = {
+            const mockBody: Omit<Employee, "id"> = {
                 name: "Derek Sabourin",
                 position: "Developer",
                 department: "ACE",
@@ -176,7 +176,7 @@ describe("Employee Controller", () => {
                 phone: "204-123-4567",
                 branchId: "1"
             };
-            const updateData = { position: "Back-end Instructor" };
+            const updateData: Pick<Employee, "position"> = { position: "Back-end Instructor" };
 
             const mockUpdatedEmployee: Employee = {
                 ...mockExistingEmployee,

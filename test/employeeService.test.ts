@@ -52,10 +52,10 @@ describe("Employee Service", () => {
 
     it("should retrieve all employees successfully", async () => {
         // Arrange
-        const mockDocs = [
+        const mockDocs: { id: string; data: () => Omit<Employee, "id"> }[] = [
             { 
                 id: "1", 
-                data: () => ({
+                data: (): Omit<Employee, "id"> => ({
                     name: "Derek Sabourin",
                     position: "Developer",
                     department: "ACE",
@@ -66,7 +66,7 @@ describe("Employee Service", () => {
             },
             {
                 id: "2",
-                data: () => ({
+                data: (): Omit<Employee, "id"> => ({
                     name: "Edraque Doe",
                     position: "Manager",
                     department: "HR",
@@ -111,9 +111,9 @@ describe("Employee Service", () => {
 
     it("should retrieve an employee by ID successfully", async () => {
         // Arrange
-        const mockDoc = {
+        const mockDoc: { id: string; data: () => Omit<Employee, "id"> } = {
             id: "1",
-            data: () => ({
+            data: (): Omit<Employee, "id"> => ({
                 name: "Derek Sabourin",
                 position: "Developer",
                 department: "ACE",
@@ -214,10 +214,10 @@ describe("Employee Service", () => {
 
     it("should retrieve employees by branch ID successfully", async () => {
         // Arrange
-        const mockDocs = [
+        const mockDocs: { id: string; data: () => Omit<Employee, "id"> }[] = [
             {
                 id: "1",
-                data: () => ({
+                data: (): Omit<Employee, "id"> => ({
                     name: "Derek Sabourin",
                     position: "Developer",
                     department: "ACE",
@@ -228,7 +228,7 @@ describe("Employee Service", () => {
             },
             {
                 id: "2",
-                data: () => ({
+                data: (): Omit<Employee, "id"> => ({
                     name: "Edraque",
                     position: "Software Engineer",
                     department: "ACE",
@@ -258,10 +258,10 @@ describe("Employee Service", () => {
 
     it("should retrieve employees by department successfully", async () => {
         // Arrange
-        const mockDocs = [
+        const mockDocs: { id: string; data: () => Omit<Employee, "id"> }[] = [
             {
                 id: "1",
-                data: () => ({
+                data: (): Omit<Employee, "id"> => ({
                     name: "Derek Sabourin",
                     position: "Developer",
                     department: "ACE",

@@ -43,9 +43,9 @@ describe("Branch Service", () => {
         expect(result.name).toBe(mockBranchData.name);
     });
 
-    it("should retrieve all branches successfully", async () => {
+    it("should retrieve all branches successfully", async (): Promise<void> => {
         // Arrange
-        const mockDocs = [
+        const mockDocs: { id: string; data: () => { name: string; address: string; phone: string; }; }[] = [
             { id: "b1", data: () => ({ name: "Branch 1", address: "Addr 1", phone: "111-111-1111" }) },
             { id: "b2", data: () => ({ name: "Branch 2", address: "Addr 2", phone: "222-222-2222" }) },
         ];
@@ -76,7 +76,7 @@ describe("Branch Service", () => {
     it("should retrieve a branch by ID successfully", async () => {
         // Arrange
         const mockBranchId: string = "branch1";
-        const mockDoc = {
+        const mockDoc: Omit<Branch, "id"> = {
             name: "RRC NDC",
             address: "100 Main St, Winnipeg, MB",
             phone: "991",
@@ -88,7 +88,7 @@ describe("Branch Service", () => {
         });
 
         // Act
-        const result = await branchService.getBranchById(mockBranchId);
+        const result: Branch = await branchService.getBranchById(mockBranchId);
 
         // Assert
         expect(firestoreRepository.getDocumentById).toHaveBeenCalledWith(
@@ -113,7 +113,7 @@ describe("Branch Service", () => {
             phone: "204-123-4567",
         };
         const mockDocumentId: string = "branch-69420";
-        const updateData = {
+        const updateData: Omit<Branch, "id"> = {
             name: "RRC EDC",
             address: "123 Main St, Winnipeg, MB",
             phone: "991",

@@ -52,7 +52,7 @@ export const validateRequest = (
                 data: any,
                 partName: string,
                 shouldStrip: boolean
-            ) => {
+            ): any => {
                 const { error, value } = schema.validate(data, {
                     abortEarly: false,
                     stripUnknown: shouldStrip,

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Branch } from "../models/branchModel";
 import * as branchService from "../services/branchService";
 import { HTTP_STATUS } from "../../../constants/httpConstants";
-import { successResponse, errorResponse, ApiResponse } from "../models/responseModel";
+import { successResponse } from "../models/responseModel";
 
 /**
  * Manages requests, responses, and validations to create a new branch

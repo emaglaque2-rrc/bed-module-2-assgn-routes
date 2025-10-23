@@ -2,7 +2,6 @@ import {
     QuerySnapshot,
     DocumentData,
     DocumentSnapshot,
-    Query,
 } from "firebase-admin/firestore";
 import { Branch } from "../../v1/models/branchModel";
 import {
@@ -66,7 +65,7 @@ export const getAllBranches = async (): Promise<Branch[]> => {
 /**
  * Returns a branch by it's ID.
  * @param id - ID of the branch to retrieve.
- * @returns The branch specified by ID, or undefined if not found.
+ * @returns The branch specified by ID, or null if not found.
  */
 export const getBranchById = async (id: string): Promise<Branch> => {
     try {
@@ -112,21 +111,17 @@ export const updateBranch = async (
             throw new Error(`Branch with ID ${id} not found`);
         }
 
+        // CITATION FOR OBJECT.ENTRIES USAGE: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+        // AND ALSO IN ITEM DEMO FROM MOD 3.
+        // Filtering out undefined fields dynamically
+        const filteredUpdates = Object.fromEntries(
+            Object.entries(branchData).filter(([_, value]) => value !== undefined)
+        );
+
         const updatedBranch: Branch = {
             ...branch,
-            ...branchData,
+            ...filteredUpdates,
         };
-
-        // I went for the simple option to only update defined values
-        if (branchData.name !== undefined) {
-            updatedBranch.name = branchData.name;
-        }
-        if (branchData.address !== undefined) {
-            updatedBranch.address = branchData.address;
-        }
-        if (branchData.phone !== undefined) {
-            updatedBranch.phone = branchData.phone;
-        }
 
         await updateDocument<Branch>(COLLECTION_NAME, id, updatedBranch);
 

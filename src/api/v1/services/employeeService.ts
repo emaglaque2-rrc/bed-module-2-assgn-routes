@@ -3,7 +3,6 @@ import {
     QuerySnapshot,
     DocumentData,
     DocumentSnapshot,
-    Query,
 } from "firebase-admin/firestore";
 import { Employee } from "../models/employeeModel";
 import {
@@ -70,7 +69,7 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
 /**
  * Returns an employee by their ID.
  * @param id - ID of the employee to retrieve.
- * @returns The employee specified by ID, or undefined if not found.
+ * @returns The employee specified by ID, or null if not found.
  */
 export const getEmployeeById = async (id: string): Promise<Employee> => {
     try {
@@ -146,7 +145,6 @@ export const updateEmployee = async (
 /**
  * Delete an employee from storage.
  * @param id - The ID of the employee to delete.
- * @returns True if the employee was deleted, false if not found.
  * @throws Error if employee with given ID is not found.
  */
 export const deleteEmployee = async (id: string): Promise<void> => {

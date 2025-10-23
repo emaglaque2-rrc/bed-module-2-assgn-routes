@@ -28,7 +28,7 @@ export const validateRequest = (
     options: ValidationOptions = {}
 ): MiddlewareFunction => {
     // stripParams - Usually don't strip params as they're route-defined
-    const defaultOptions = {
+    const defaultOptions: ValidationOptions = {
         stripBody: true,
         stripQuery: true,
         stripParams: false,
@@ -76,7 +76,7 @@ export const validateRequest = (
                     schemas.body,
                     req.body,
                     "Body",
-                    defaultOptions.stripBody
+                    defaultOptions.stripBody ?? true
                 );
             }
 
@@ -85,7 +85,7 @@ export const validateRequest = (
                     schemas.params,
                     req.params,
                     "Params",
-                    defaultOptions.stripParams
+                    defaultOptions.stripParams ?? false
                 );
             }
 
@@ -94,7 +94,7 @@ export const validateRequest = (
                     schemas.query,
                     req.query,
                     "Query",
-                    defaultOptions.stripQuery
+                    defaultOptions.stripQuery ?? true
                 );
             }
 

@@ -228,8 +228,8 @@ describe("Employee Controller", () => {
             // Assert
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: undefined,
-                data: "Employee with ID 1 deleted successfully.",
+                message: "Employee with ID 1 deleted successfully.",
+                data: null,
                 status: "success",
             });
         });

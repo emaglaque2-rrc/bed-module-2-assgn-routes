@@ -30,7 +30,7 @@ describe("Employee Validation Middleware", () => {
             department: "ACE",
             email: "derek.rrc@example.com",
             phone: "204-123-4567",
-            branchId: 1,
+            branchId: "1",
         };
         const middleware: MiddlewareFunction = validateRequest(
             employeeSchemas.create
@@ -52,7 +52,7 @@ describe("Employee Validation Middleware", () => {
             department: "ACE",
             email: "derek.rrc@example.com",
             phone: "204-123-4567",
-            branchId: 1,
+            branchId: "1",
         };
         const middleware: MiddlewareFunction = validateRequest(
             employeeSchemas.create

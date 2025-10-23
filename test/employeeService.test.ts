@@ -18,7 +18,7 @@ describe("Employee Service", () => {
             department: "ACE",
             email: "derek.sabourin@example.com",
             phone: "123-456-7890",
-            branchId: 1
+            branchId: "1",
         };
         const mockDocumentId: string = "123";
 
@@ -38,7 +38,7 @@ describe("Employee Service", () => {
                 department: "ACE",
                 email: "derek.sabourin@example.com",
                 phone: "123-456-7890",
-                branchId: 1
+                branchId: "1"
             })
         );
         expect(result.id).toBe(mockDocumentId);
@@ -61,7 +61,7 @@ describe("Employee Service", () => {
                     department: "ACE",
                     email: "derek.sabourin@example.com",
                     phone: "123-456-7890",
-                    branchId: 1
+                    branchId: "1"
                 }),
             },
             {
@@ -72,7 +72,7 @@ describe("Employee Service", () => {
                     department: "HR",
                     email: "emaglaque2@academic.rrc.ca",
                     phone: "991",
-                    branchId: 2
+                    branchId: "2"
                 }),
             },
         ];
@@ -96,7 +96,7 @@ describe("Employee Service", () => {
             department: "ACE",
             email: "derek.sabourin@example.com",
             phone: "123-456-7890",
-            branchId: 1
+            branchId: "1"
         });
         expect(result[1]).toEqual({
             id: "2",
@@ -105,7 +105,7 @@ describe("Employee Service", () => {
             department: "HR",
             email: "emaglaque2@academic.rrc.ca",
             phone: "991",
-            branchId: 2
+            branchId: "2"
         }); 
     });
 
@@ -119,7 +119,7 @@ describe("Employee Service", () => {
                 department: "ACE",
                 email: "derek.sabourin@example.com",
                 phone: "123-456-7890",
-                branchId: 1
+                branchId: "1"
             })
         };
 
@@ -139,7 +139,7 @@ describe("Employee Service", () => {
         expect(result.department).toBe("ACE");
         expect(result.email).toBe("derek.sabourin@example.com");
         expect(result.phone).toBe("123-456-7890");
-        expect(result.branchId).toBe(1);
+        expect(result.branchId).toBe("1");
     });
 
     it("should update an employee successfully", async () => {
@@ -151,7 +151,7 @@ describe("Employee Service", () => {
             department: "ACE",
             email: "derek.sabourin@example.com",
             phone: "123-456-7890",
-            branchId: 1
+            branchId: "1"
         };
         (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue({
             id: mockExistingEmployeeData.id,
@@ -193,7 +193,7 @@ describe("Employee Service", () => {
             department: "ACE",
             email: "derek.sabourin@example.com",
             phone: "991",
-            branchId: 1
+            branchId: "1"
         };
         
         (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue({
@@ -223,7 +223,7 @@ describe("Employee Service", () => {
                     department: "ACE",
                     email: "derek.sabourin@example.com",
                     phone: "991",
-                    branchId: 1
+                    branchId: "1"
                 }),
             },
             {
@@ -234,7 +234,7 @@ describe("Employee Service", () => {
                     department: "ACE",
                     email: "emaglaque@academic.rrc.ca",
                     phone: "992",
-                    branchId: 1
+                    branchId: "1"
                 }),
             },
         ];
@@ -252,7 +252,7 @@ describe("Employee Service", () => {
             [{ fieldName: "branchId", fieldValue: "1" },]
         );
         expect(result).toHaveLength(2);
-        expect(result[0].branchId).toBe(1);
+        expect(result[0].branchId).toBe("1");
         expect(result[1].name).toBe("Edraque");
     });
 
@@ -267,7 +267,7 @@ describe("Employee Service", () => {
                     department: "ACE",
                     email: "derek.sabourin@example.com",
                     phone: "991",
-                    branchId: 1
+                    branchId: "1"
                 }),
             },
         ];

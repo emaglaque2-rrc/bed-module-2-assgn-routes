@@ -23,9 +23,9 @@ export const branchSchemas = {
     // GET /api/v1/branches/:id - Get Branch by ID
     getBranchById: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Branch ID is required",
-                "number.base": "Branch ID must be a number",
+                "string.base": "Branch ID must be a string",
             }),
         }),
     },
@@ -33,9 +33,9 @@ export const branchSchemas = {
     // PUT /api/v1/branches/:id - Update existing Branch
     update: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Branch ID is required",
-                "number.base": "Branch ID must be a number",
+                "string.base": "Branch ID must be a string",
             }),
         }),
         body: Joi.object({
@@ -54,9 +54,9 @@ export const branchSchemas = {
     // DELETE /api/v1/branches/:id - Delete Branch by ID
     delete: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Branch ID is required",
-                "number.base": "Branch ID must be a number",
+                "string.base": "Branch ID must be a string",
             }),
         }),
     },

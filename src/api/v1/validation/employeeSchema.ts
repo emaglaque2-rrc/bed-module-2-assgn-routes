@@ -27,10 +27,9 @@ export const employeeSchemas = {
                 "any.required": "Phone number is required",
                 "string.empty": "Phone number cannot be empty",
             }),
-            // CITATION FOR NUMBER().INTEGER() USAGE: https://joi.dev/api/?v=17.13.3#numberinteger
-            branchId: Joi.number().integer().required().messages({
+            branchId: Joi.string().required().messages({
                 "any.required": "Branch ID is required",
-                "number.base": "Branch ID must be a number",
+                "string.empty": "Branch ID cannot be empty",
             }),
         }),
     },
@@ -38,9 +37,9 @@ export const employeeSchemas = {
     // PUT /api/v1/employees/:id - Update existing Employee
     update: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Employee ID is required",
-                "number.base": "Employee ID must be a number",
+                "string.base": "Employee ID must be a string",
             }),
         }),
         body: Joi.object({
@@ -61,9 +60,8 @@ export const employeeSchemas = {
             phone: Joi.string().optional().messages({
                 "string.empty": "Phone number cannot be empty",
             }),
-            // CITATION FOR NUMBER().INTEGER() USAGE: https://joi.dev/api/?v=17.13.3#numberinteger
-            branchId: Joi.number().integer().optional().messages({
-                "number.base": "Branch ID must be a number",
+            branchId: Joi.string().optional().messages({
+                "string.empty": "Branch ID cannot be empty",
             }),
         })
     },
@@ -71,9 +69,9 @@ export const employeeSchemas = {
     // GET /api/v1/employees/:id - Retrieve a single Employee by ID
     getById: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Employee ID is required",
-                "number.base": "Employee ID must be a number",
+                "string.base": "Employee ID must be a string",
             }),
         }),
     },
@@ -81,9 +79,9 @@ export const employeeSchemas = {
     // DELETE /api/v1/employees/:id - Delete an Employee by ID
     delete: {
         params: Joi.object({
-            id: Joi.number().integer().required().messages({
+            id: Joi.string().required().messages({
                 "any.required": "Employee ID is required",
-                "number.base": "Employee ID must be a number",
+                "string.base": "Employee ID must be a string",
             }),
         }),
     },
@@ -91,9 +89,9 @@ export const employeeSchemas = {
     // GET /api/v1/employees/branch/:branchId - Retrieve Employees by Branch ID
     getEmployeesByBranchId: {
         params: Joi.object({
-            branchId: Joi.number().integer().required().messages({
+            branchId: Joi.string().required().messages({
                 "any.required": "Branch ID is required",
-                "number.base": "Branch ID must be a number",
+                "string.empty": "Branch ID cannot be empty",
             }),
         }),
     },

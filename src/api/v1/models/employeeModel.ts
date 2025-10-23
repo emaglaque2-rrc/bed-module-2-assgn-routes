@@ -8,5 +8,5 @@ export interface Employee {
   department: string;
   email: string;
   phone: string;
-  branchId: number;
+  branchId: string;
 }

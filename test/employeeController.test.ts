@@ -33,7 +33,7 @@ describe("Employee Controller", () => {
                     department: "ACE",
                     email: "derek.sabourin@example.com",
                     phone: "204-123-4567",
-                    branchId: 1
+                    branchId: "1"
                 },
             ];
             (employeeService.getAllEmployees as jest.Mock).mockResolvedValue(mockEmployees);
@@ -85,7 +85,7 @@ describe("Employee Controller", () => {
                 department: "ACE",
                 email: "derek.sabourin@example.com",
                 phone: "204-123-4567",
-                branchId: 1
+                branchId: "1"
             };
 
             const mockEmployee: Employee = {
@@ -114,7 +114,7 @@ describe("Employee Controller", () => {
                         department: "ACE",
                         email: "derek.sabourin@example.com",
                         phone: "204-123-4567",
-                        branchId: 1
+                        branchId: "1"
                     },
                 status: "success",
             });
@@ -132,7 +132,7 @@ describe("Employee Controller", () => {
                 department: "ACE",
                 email: "derek.sabourin@example.com",
                 phone: "204-123-4567",
-                branchId: 1
+                branchId: "1"
             };
 
             mockReq.params = { id: "1" };
@@ -156,7 +156,7 @@ describe("Employee Controller", () => {
                         department: "ACE",
                         email: "derek.sabourin@example.com",
                         phone: "204-123-4567",
-                        branchId: 1
+                        branchId: "1"
                     },
                     status: "success",
             });
@@ -174,7 +174,7 @@ describe("Employee Controller", () => {
                 department: "ACE",
                 email: "derek.sabourin@example.com",
                 phone: "204-123-4567",
-                branchId: 1
+                branchId: "1"
             };
             const updateData = { position: "Back-end Instructor" };
 
@@ -204,7 +204,7 @@ describe("Employee Controller", () => {
                     department: "ACE",
                     email: "derek.sabourin@example.com",
                     phone: "204-123-4567",
-                    branchId: 1
+                    branchId: "1"
                 },
                 status: "success",
             });

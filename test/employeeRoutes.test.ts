@@ -2,7 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import * as employeeController from "../src/api/v1/controllers/employeeController";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
-import { Employee } from "../src/data/employee";
+import { Employee } from "../src/api/v1/models/employeeModel";
 
 jest.mock("../src/api/v1/controllers/employeeController", () => ({
     createEmployee: jest.fn((_req, res) => res.status(HTTP_STATUS.CREATED).send()),
@@ -30,13 +30,13 @@ describe("Employee Routes", () => {
         it("should call createEmployee controller with valid data", async () => {
             // Arrange
             const mockEmployee: Employee = {
-                id: 1,
+                id: "1",
                 name: "Derek Sabourin",
                 position: "Instructor",
                 department: "ACE Department",
                 email: "derek.sabourin@rrc.com",
                 phone: "204-991-991",
-                branchId: 4
+                branchId: "4"
             };
 
             // Act
@@ -63,7 +63,7 @@ describe("Employee Routes", () => {
     describe("PUT /api/v1/employees/:id", () => {
         it("should call updateEmployee controller with valid data", async () => {
             // Arrange
-            const employeeId: number = 1;
+            const employeeId: string = "1";
             const updates: Partial<Employee> = {
                 phone: "204-991-0044"
             };
@@ -93,7 +93,7 @@ describe("Employee Routes", () => {
     describe("GET /api/v1/employees/branch/:branchId", () => {
         it("should call getEmployeesByBranchId controller with valid branchId", async () => {
             // Arrange
-            const branchId: number = 4;
+            const branchId: string = "4";
 
             // Act
             await request(app).get(`/api/v1/employees/branch/${branchId}`);

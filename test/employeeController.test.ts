@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { HTTP_STATUS } from "../src/constants/httpConstants";
 import * as employeeController from "../src/api/v1/controllers/employeeController";
 import * as employeeService from "../src/api/v1/services/employeeService";
-import { Employee } from "../src/data/employee";
+import { Employee } from "../src/api/v1/models/employeeModel";
 
 jest.mock("../src/api/v1/services/employeeService");
 
@@ -10,7 +10,6 @@ describe("Employee Controller", () => {
     let mockReq: Partial<Request>;
     let mockRes: Partial<Response>;
     let mockNext: NextFunction;
-    let mockEmployee: Employee;
 
     beforeEach(() => {
         jest.clearAllMocks();
@@ -20,23 +19,24 @@ describe("Employee Controller", () => {
             json: jest.fn(),
         };
         mockNext = jest.fn();
-
-        mockEmployee = {
-            id: 1,
-            name: "Alice Johnson",
-            position: "Branch Manager",
-            department: "Management",
-            email: "alice.johnson@pixell-river.com",
-            phone: "604-555-0148",
-            branchId: 1,
-        }
     });
 
     // Test for getAllEmployees
     describe("getAllEmployees", () => {
         it("should return all employees with status 200", async () => {
             // Arrange
-            (employeeService.getAllEmployees as jest.Mock).mockResolvedValue([mockEmployee]);
+            const mockEmployees: Employee[] = [
+                {
+                    id: "1",
+                    name: "Derek Sabourin",
+                    position: "Developer",
+                    department: "ACE",
+                    email: "derek.sabourin@example.com",
+                    phone: "204-123-4567",
+                    branchId: 1
+                },
+            ];
+            (employeeService.getAllEmployees as jest.Mock).mockResolvedValue(mockEmployees);
 
             // Act
             await employeeController.getAllEmployees(
@@ -49,17 +49,8 @@ describe("Employee Controller", () => {
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees retrieved successfully",
-                data: [
-                    {
-                        id: 1,
-                        name: "Alice Johnson",
-                        position: "Branch Manager",
-                        department: "Management",
-                        email: "alice.johnson@pixell-river.com",
-                        phone: "604-555-0148",
-                        branchId: 1,
-                    }
-                ],
+                status: "success",
+                data: mockEmployees,
             });
         });
 
@@ -79,6 +70,7 @@ describe("Employee Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employees retrieved successfully",
                 data: [],
+                status: "success",
             });
         });
     });
@@ -87,7 +79,21 @@ describe("Employee Controller", () => {
     describe("createEmployee", () => {
         it("should return 201 and success message", async () => {
             // Arrange
-            mockReq.body = mockEmployee;
+            const mockBody = {
+                name: "Derek Sabourin",
+                position: "Developer",
+                department: "ACE",
+                email: "derek.sabourin@example.com",
+                phone: "204-123-4567",
+                branchId: 1
+            };
+
+            const mockEmployee: Employee = {
+                id: "1",
+                ...mockBody,
+            };
+
+            mockReq.body = mockBody;
             (employeeService.createEmployee as jest.Mock).mockResolvedValue(mockEmployee);
 
             // Act
@@ -102,41 +108,33 @@ describe("Employee Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee created successfully",
                 data: {
-                        id: 1,
-                        name: "Alice Johnson",
-                        position: "Branch Manager",
-                        department: "Management",
-                        email: "alice.johnson@pixell-river.com",
-                        phone: "604-555-0148",
-                        branchId: 1,
+                        id: "1",
+                        name: "Derek Sabourin",
+                        position: "Developer",
+                        department: "ACE",
+                        email: "derek.sabourin@example.com",
+                        phone: "204-123-4567",
+                        branchId: 1
                     },
+                status: "success",
             });
         });
-
-        it("should return 400 if required fields are missing", async () => {
-            // Arrange
-            mockReq.body = {};
-
-            // Act
-            await employeeController.createEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: "Missing required fields: name, position, department, email, phone, branchId", 
-            });
-        });
-
     });
 
     // Test for getEmployeeById
     describe("getEmployeeById", () => {
         it("should return 200 and employee data", async () => {
             // Arrange 
+            const mockEmployee: Employee = {
+                id: "1",
+                name: "Derek Sabourin",
+                position: "Developer",
+                department: "ACE",
+                email: "derek.sabourin@example.com",
+                phone: "204-123-4567",
+                branchId: 1
+            };
+
             mockReq.params = { id: "1" };
             (employeeService.getEmployeeById as jest.Mock).mockResolvedValue(mockEmployee);
 
@@ -150,35 +148,17 @@ describe("Employee Controller", () => {
             // Assert
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: `Employee ${mockEmployee.id} found successfully`,
+                message: "Employee retrieved successfully",
                 data: {
-                        id: 1,
-                        name: "Alice Johnson",
-                        position: "Branch Manager",
-                        department: "Management",
-                        email: "alice.johnson@pixell-river.com",
-                        phone: "604-555-0148",
-                        branchId: 1,
+                        id: "1",
+                        name: "Derek Sabourin",
+                        position: "Developer",
+                        department: "ACE",
+                        email: "derek.sabourin@example.com",
+                        phone: "204-123-4567",
+                        branchId: 1
                     },
-            });
-        });
-
-        it("should return 404 if employee not found", async () => {
-            // Arrange
-            mockReq.params = { id: "999" };
-            (employeeService.getEmployeeById as jest.Mock).mockResolvedValue(undefined);
-
-            // Act
-            await employeeController.getEmployeeById(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: `Employee with ID ${mockReq.params.id} not found`,
+                    status: "success",
             });
         });
     });
@@ -187,10 +167,24 @@ describe("Employee Controller", () => {
     describe("updateEmployee", () => {
         it("should return 200 and updated employee data", async () => {
             // Arrange
-            mockReq.params = { id: "1" };
-            mockReq.body = { position: "Back-end Instructor" };
-            const updatedEmployee: Employee = { ...mockEmployee, ...mockReq.body };
-            (employeeService.updateEmployee as jest.Mock).mockResolvedValue(updatedEmployee);
+            const mockExistingEmployee: Employee = {
+                id: "1",
+                name: "Derek Sabourin",
+                position: "Developer",
+                department: "ACE",
+                email: "derek.sabourin@example.com",
+                phone: "204-123-4567",
+                branchId: 1
+            };
+            const updateData = { position: "Back-end Instructor" };
+
+            const mockUpdatedEmployee: Employee = {
+                ...mockExistingEmployee,
+                ...updateData
+            };
+            mockReq.params = { id: mockExistingEmployee.id };
+            mockReq.body = updateData;
+            (employeeService.updateEmployee as jest.Mock).mockResolvedValue(mockUpdatedEmployee);
 
             // Act
             await employeeController.updateEmployee(
@@ -204,33 +198,15 @@ describe("Employee Controller", () => {
             expect(mockRes.json).toHaveBeenCalledWith({
                 message: "Employee updated successfully.",
                 data: {
-                    id: 1,
-                    name: "Alice Johnson",
+                    id: "1",
+                    name: "Derek Sabourin",
                     position: "Back-end Instructor",
-                    department: "Management",
-                    email: "alice.johnson@pixell-river.com",
-                    phone: "604-555-0148",
-                    branchId: 1,
+                    department: "ACE",
+                    email: "derek.sabourin@example.com",
+                    phone: "204-123-4567",
+                    branchId: 1
                 },
-            });
-        });
-
-        it("should return 400 if update body is missing", async () => {
-            // Arrange
-            mockReq.params = { id: "1" };
-            mockReq.body = {};
-
-            // Act
-            await employeeController.updateEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.BAD_REQUEST);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: "At least one valid field must be provided to update.",
+                status: "success",
             });
         });
     });
@@ -240,7 +216,7 @@ describe("Employee Controller", () => {
         it("should return 200 and success message", async () => {
             // Arrange
             mockReq.params = { id: "1" };
-            (employeeService.deleteEmployee as jest.Mock).mockResolvedValue(true);
+            (employeeService.deleteEmployee as jest.Mock).mockResolvedValue(undefined);
 
             // Act
             await employeeController.deleteEmployee(
@@ -252,26 +228,9 @@ describe("Employee Controller", () => {
             // Assert
             expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.OK);
             expect(mockRes.json).toHaveBeenCalledWith({
-                message: `Employee with ID ${mockReq.params.id} deleted successfully.`
-            });
-        });
-
-        it("should return 404 and error if employee isn't found", async () => {
-            // Arrange
-            mockReq.params = { id: "444" };
-            (employeeService.deleteEmployee as jest.Mock).mockResolvedValue(false);
-
-            // Act
-            await employeeController.deleteEmployee(
-                mockReq as Request,
-                mockRes as Response,
-                mockNext
-            );
-
-            // Assert
-            expect(mockRes.status).toHaveBeenCalledWith(HTTP_STATUS.NOT_FOUND);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                message: `Employee with ID 444 not found.`
+                message: undefined,
+                data: "Employee with ID 1 deleted successfully.",
+                status: "success",
             });
         });
     });

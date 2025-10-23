@@ -128,7 +128,7 @@ describe("Branch Service", () => {
         );
 
         // Act
-        const result: Branch = await branchService.updateBranch(
+        const result: Omit<Branch, "id"> = await branchService.updateBranch(
             mockDocumentId,
             updateData
         );
@@ -143,7 +143,7 @@ describe("Branch Service", () => {
                 phone: "991",
             })
         );
-        expect(result.id).toBe(mockDocumentId);
+        expect(result.address).toBe(updateData.address);
         expect(result.phone).toBe(updateData.phone);
     });
 

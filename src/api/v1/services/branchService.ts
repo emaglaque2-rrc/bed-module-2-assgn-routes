@@ -118,14 +118,14 @@ export const updateBranch = async (
             Object.entries(branchData).filter(([_, value]) => value !== undefined)
         );
 
-        const updatedBranch: Branch = {
+        const updatedBranchWithoutId = {
             ...branch,
             ...filteredUpdates,
         };
 
-        await updateDocument<Branch>(COLLECTION_NAME, id, updatedBranch);
-
-        return structuredClone(updatedBranch);
+        const { id: _, ...branchDataWithoutId } = updatedBranchWithoutId;
+        await updateDocument<Branch>(COLLECTION_NAME, id, branchDataWithoutId);
+        return structuredClone({ id, ...branchDataWithoutId });
     } catch (error: unknown) {
         const errorMessage =
             error instanceof Error ? error.message : "Unknown error";

@@ -158,7 +158,7 @@ export const getEmployeesByBranchId = async (
         const employeesByBranch: Employee[] = await employeeService.getEmployeesByBranchId(branchId);
 
         res.status(HTTP_STATUS.OK).json(
-            successResponse(employeesByBranch, `Employees for branch ID ${id} retrieved successfully.`)
+            successResponse(employeesByBranch, `Employees for branch ID ${branchId} retrieved successfully.`)
         );
     } catch (error: unknown) {
         next(error);

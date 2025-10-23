@@ -146,4 +146,35 @@ describe("Branch Service", () => {
         expect(result.id).toBe(mockDocumentId);
         expect(result.phone).toBe(updateData.phone);
     });
+
+    it("should delete a branch successfully", async () => {
+        // Arrange
+        const mockExistingBranchData: {
+            name: string;
+            address: string;
+            phone: string;
+        } = {
+            name: "RRC EDC",
+            address: "123 Main St, Winnipeg, MB",
+            phone: "204-123-4567",
+        };
+        const mockDocumentId: string = "branch-69420";
+
+        (firestoreRepository.getDocumentById as jest.Mock).mockResolvedValue({
+            id: mockDocumentId,
+            data: () => mockExistingBranchData,
+        });
+        (firestoreRepository.deleteDocument as jest.Mock).mockResolvedValue(
+            undefined
+        );
+
+        // Act
+        await branchService.deleteBranch(mockDocumentId);
+
+        // Assert
+        expect(firestoreRepository.deleteDocument).toHaveBeenCalledWith(
+            "branches",
+            mockDocumentId
+        );
+    });
 });

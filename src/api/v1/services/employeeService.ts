@@ -14,7 +14,7 @@ import {
     getDocumentsByFieldValues,
 } from "../repositories/firestoreRepository";
 
-// reference to the Firestore collection name
+// reference to the Firestore collection name.
 const COLLECTION_NAME = "employees";
 
 /**

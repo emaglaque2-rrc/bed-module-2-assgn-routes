@@ -1,21 +1,47 @@
 import express, { Router } from "express";
 import * as employeeController from "../controllers/employeeController";
+import { validateRequest } from "../middleware/validate";
+import { employeeSchemas } from "../validation/employeeSchema";
 
 const router: Router = express.Router();
 
 // Base path will be prefixed with "/api/v1/employees" from app.ts
-router.post("/", employeeController.createEmployee);
-
 router.get("/", employeeController.getAllEmployees);
 
-router.get("/:id", employeeController.getEmployeeById);
+router.post(
+    "/", 
+    validateRequest(employeeSchemas.create),
+    employeeController.createEmployee
+);
 
-router.put("/:id", employeeController.updateEmployee);
+router.get(
+    "/:id",
+    validateRequest(employeeSchemas.getById),
+    employeeController.getEmployeeById
+);
 
-router.delete("/:id", employeeController.deleteEmployee);
+router.put(
+    "/:id",
+    validateRequest(employeeSchemas.update),
+    employeeController.updateEmployee
+);
 
-router.get("/branch/:branchId", employeeController.getEmployeesByBranchId);
+router.delete(
+    "/:id",
+    validateRequest(employeeSchemas.delete),
+    employeeController.deleteEmployee
+);
 
-router.get("/department/:department", employeeController.getEmployeesByDepartment);
+router.get(
+    "/branch/:branchId",
+    validateRequest(employeeSchemas.getEmployeesByBranchId),
+    employeeController.getEmployeesByBranchId
+);
+
+router.get(
+    "/department/:department",
+    validateRequest(employeeSchemas.getEmployeesByDepartment),
+    employeeController.getEmployeesByDepartment
+);
 
 export default router;

@@ -1,2 +1,6 @@
 node_modules/
 dist/
+
+.vscode/
+
+back-end-project-module3-firebase-adminsdk-fbsvc-1ff4295670.json
